@@ -124,11 +124,23 @@
 {% if user.is_authenticated %}
 <div class="mt-4">
     <h4>Leave a Review</h4>
-    <form method="POST" action="{% url 'submit_feedback' course.id %}" class="mt-3">
-        {% csrf_token %}
-        {{ form|crispy }}
-        <button type="submit" class="btn btn-primary mt-2">Submit Feedback</button>
-    </form>
+    <form method="post" action="{% url 'submit_feedback' course.id %}" class="mt-3">
+    {% csrf_token %}
+
+    <div class="mb-3">
+        <label class="form-label" for="{{ form.comment.id_for_label }}">Comment</label>
+        {{ form.comment }}
+        {{ form.comment.errors }}
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label" for="{{ form.rating.id_for_label }}">Rating</label>
+        {{ form.rating }}
+        {{ form.rating.errors }}
+    </div>
+
+    <button type="submit" class="btn btn-primary mt-2">Submit Feedback</button>
+</form>
 </div>
 {% else %}
 <p class="mt-3"><a href="{% url 'login' %}" class="btn btn-secondary">Login to leave feedback</a></p>

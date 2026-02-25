@@ -2,6 +2,7 @@ from django import forms
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
 from .models import UserProfile
+from django.db import transaction
 
 
 class UserRegisterForm(UserCreationForm):
@@ -15,19 +16,24 @@ class UserRegisterForm(UserCreationForm):
         model = User
         fields = ['username', 'email', 'first_name', 'last_name', 'password1', 'password2', 'role']
 
+    @transaction.atomic
     def save(self, commit=True):
         user = super().save(commit=False)
-        user.first_name = self.cleaned_data['first_name']
-        user.last_name = self.cleaned_data['last_name']
+
+        # set any user fields you capture
+        user.first_name = self.cleaned_data.get("first_name", "")
+        user.last_name = self.cleaned_data.get("last_name", "")
+
         if commit:
             user.save()
-            # Create a UserProfile linked to this user
-            UserProfile.objects.create(
-                user=user,
-                first_name=user.first_name,
-                last_name=user.last_name,
-                role=self.cleaned_data['role']
-            )
+
+            # DO NOT create blindly; profile may already exist due to signals
+            profile, _ = UserProfile.objects.get_or_create(user=user)
+            profile.role = self.cleaned_data["role"]
+            profile.first_name = user.first_name
+            profile.last_name = user.last_name
+            profile.save()
+
         return user
 
 

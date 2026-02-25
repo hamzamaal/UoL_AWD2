@@ -18,7 +18,7 @@ def register(request):
         form = UserRegisterForm(request.POST)
         if form.is_valid():
             user = form.save()
-            UserProfile.objects.create(user=user, role='student')
+            #UserProfile.objects.create(user=user, role='student')
             messages.success(request, 'Account created successfully! You can now log in.')
             return redirect('login')
     else:
