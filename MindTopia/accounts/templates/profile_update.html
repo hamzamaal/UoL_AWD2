@@ -1,32 +1,76 @@
+<!-- Extend the base template to use the site's main layout -->
 {% extends "base.html" %}
+
+<!-- Load Crispy Forms for styled Django form rendering -->
 {% load crispy_forms_tags %}
+
+<!-- Load static files such as CSS -->
 {% load static %}
 
 {% block head %}
-<title>Update Your Info!</title>
+
+<!-- Page title shown in the browser tab -->
+<title>Login Here!</title>
+
+<!-- Link to custom stylesheet for styling -->
 <link rel="stylesheet" type="text/css" href="{% static 'css/forum.css' %}">
+
 {% endblock %}
 
 {% block content %}
-<div class="container py-5">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="card shadow-sm border-0 p-4">
-                <div class="text-center">
-                    <img class="rounded-circle img-fluid mb-3" src="{{ user.profile.image.url }}" alt="Profile Image" width="150" height="150">
-                </div>
-                <h3 class="text-center fw-bold mb-4">Profile Info</h3>
 
-                <form method="POST" enctype="multipart/form-data">
-                    {% csrf_token %}
-                    {{ u_form|crispy }}
-                    {{ p_form|crispy }}
-                    <div class="d-grid">
-                        <button class="btn btn-primary mt-3" type="submit">Update</button>
+<!-- Main container for the login page -->
+<div class="container py-5">
+
+    <!-- Center the login form horizontally -->
+    <div class="row justify-content-center">
+
+        <!-- Control the width of the login card -->
+        <div class="col-md-6">
+
+            <!-- Card component used to hold the login form -->
+            <div class="card shadow-sm border-0">
+
+                <!-- Card body containing form elements -->
+                <div class="card-body">
+
+                    <!-- Login page heading -->
+                    <h3 class="text-center fw-bold mb-4">Log In</h3>
+
+                    <!-- Login form -->
+                    <form method="POST">
+
+                        <!-- CSRF token for Django form security -->
+                        {% csrf_token %}
+
+                        <!-- Render the login form using Crispy Forms -->
+                        {{ form|crispy }}
+
+                        <!-- Container for the submit button -->
+                        <div class="d-grid">
+
+                            <!-- Submit button to log the user in -->
+                            <button class="btn btn-primary mt-3" type="submit">Login</button>
+
+                        </div>
+
+                    </form>
+
+                    <!-- Section with link to the registration page -->
+                    <div class="border-top pt-3 mt-3 text-center">
+
+                        <small class="text-muted">
+
+                            <!-- Link for users who do not yet have an account -->
+                            Need An Account? <a href="{% url 'register' %}" class="text-decoration-none">Sign Up Now</a>
+
+                        </small>
+
                     </div>
-                </form>
+                </div>
             </div>
         </div>
     </div>
 </div>
+
 {% endblock content %}
