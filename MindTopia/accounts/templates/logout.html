@@ -1,19 +1,38 @@
+<!-- Extend the main site layout -->
 {% extends "base.html" %}
+
+<!-- Load static files such as CSS -->
 {% load static %}
 
 {% block head %}
+<!-- Page title displayed in the browser tab -->
 <title>Visit Again!</title>
+
+<!-- Link to stylesheet used for styling -->
 <link rel="stylesheet" type="text/css" href="{% static 'css/forum' %}">
 
 {% endblock %}
+
 {% block content %}
+
+<!-- Add vertical spacing at the top of the page -->
 <br><br>
+
+<!-- Container for the logout message -->
 <div class="container post-container">
+
+    <!-- Inform the user that they have logged out -->
     <h2>You have been logged out</h2>
+
+    <!-- Section providing a link to log in again -->
     <div class="border-top pt-3">
         <small class="text-muted">
+
+            <!-- Link directing the user back to the login page -->
             <a href="{% url 'login' %}">Log In Again</a>
+
         </small>
     </div>
 </div>
+
 {% endblock content %}

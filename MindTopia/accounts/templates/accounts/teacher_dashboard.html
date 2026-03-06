@@ -1,36 +1,67 @@
+<!-- Extend the base template so this page uses the main site layout -->
 {% extends 'base.html' %}
+
+<!-- Load Crispy Forms for consistent Bootstrap form rendering -->
 {% load crispy_forms_tags %}
 
 {% block content %}
+<!-- Main container for the teacher dashboard page -->
 <div class="container py-5">
+
+    <!-- Page heading -->
     <h2 class="text-center fw-bold">Teacher Dashboard</h2>
 
-    <!-- Search Form -->
+    <!-- Search form used to filter users by name or role -->
     <form method="GET" action="{% url 'teacher_dashboard' %}" class="mb-4">
         <div class="input-group">
+            <!-- Input field for entering search text -->
             <input type="text" name="q" class="form-control" placeholder="Search by name or role..." value="{{ query }}">
+            
+            <!-- Button to submit the search request -->
             <button type="submit" class="btn btn-primary">Search</button>
         </div>
     </form>
 
-    <!-- Search Results -->
+    <!-- Section displaying search results -->
     <div class="row">
+
+        <!-- Check if users were returned from the search -->
         {% if users %}
+
+            <!-- Loop through each user returned from the query -->
             {% for user in users %}
+
+                <!-- Column layout for each user card -->
                 <div class="col-md-4">
                     <div class="card shadow-sm border-0">
+
+                        <!-- Display the user's profile image -->
                         <img src="{{ user.image.url }}" class="card-img-top img-fluid rounded" alt="{{ user.user.username }}">
+
                         <div class="card-body text-center">
+
+                            <!-- Display the username -->
                             <h5 class="card-title fw-bold">{{ user.user.username }}</h5>
+
+                            <!-- Display the user's full name -->
                             <p class="text-muted">{{ user.first_name }} {{ user.last_name }}</p>
+
+                            <!-- Display the user's role -->
                             <span class="badge bg-info">{{ user.role|title }}</span>
+
                         </div>
                     </div>
                 </div>
+
             {% endfor %}
+
         {% else %}
+
+            <!-- Message shown if no users match the search -->
             <p class="text-center text-muted">No users found.</p>
+
         {% endif %}
     </div>
 </div>
+
 {% endblock %}

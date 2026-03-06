@@ -1,10 +1,12 @@
-{% extends 'base.html' %}
-{% load static %}
+{% extends 'base.html' %} {# Inherit the main site layout including navigation and footer #}
+{% load static %} {# Enable use of Django static files such as CSS or images #}
 
-{% block head %}
-<title>{{ user.username }}'s Profile | MindTopia</title>
+{% block head %} {# Override the head section defined in base.html #}
+
+<title>{{ user.username }}'s Profile | MindTopia</title> {# Dynamic page title displaying the logged-in user's username #}
+
 <style>
-    .profile-container {
+    .profile-container { /* Main card container used to center and style the profile page */
         max-width: 800px;
         margin: auto;
         background: #fff;
@@ -12,51 +14,67 @@
         box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.1);
         padding: 30px;
     }
-    .profile-img {
+
+    .profile-img { /* Styling for the circular user profile image */
         width: 150px;
         height: 150px;
         object-fit: cover;
         border-radius: 50%;
         border: 4px solid #4ca1af;
     }
-    .info-section {
+
+    .info-section { /* Container holding the user's profile information fields */
         padding: 15px 0;
     }
-    .info-section p {
+
+    .info-section p { /* Reduce spacing between information lines */
         margin-bottom: 5px;
     }
 </style>
+
 {% endblock %}
 
-{% block content %}
-<div class="container py-5">
-    <div class="profile-container text-center">
+{% block content %} {# Main content section inserted into the base template layout #}
+
+<div class="container py-5"> {# Bootstrap container adding spacing and responsive layout #}
+
+    <div class="profile-container text-center"> {# Profile card layout centered on the page #}
+
         <!-- Profile Picture -->
-        <img src="{{ user.userprofile.image.url }}" class="profile-img mb-3" alt="Profile Picture">
+        <img src="{{ user.userprofile.image.url }}" class="profile-img mb-3" alt="Profile Picture"> <!-- Display user's profile image stored in UserProfile model -->
 
         <!-- User Info -->
-        <h2 class="fw-bold">{{ user.userprofile.first_name }} {{ user.userprofile.last_name }}</h2>
-        <p class="text-muted">@{{ user.username }}</p>
-        <p class="badge bg-primary">{{ user.userprofile.get_role_display }}</p>
+        <h2 class="fw-bold">{{ user.userprofile.first_name }} {{ user.userprofile.last_name }}</h2> <!-- Display user's first and last name -->
+        <p class="text-muted">@{{ user.username }}</p> <!-- Display username with muted styling -->
+        <p class="badge bg-primary">{{ user.userprofile.get_role_display }}</p> <!-- Display user role using Django model choice display -->
 
         <!-- Information Section -->
-        <div class="info-section text-start">
-            <h5 class="fw-semibold">Profile Details</h5>
-            <hr>
-            <p><strong>Email:</strong> {{ user.email }}</p>
-            {% if user.userprofile.bio %}
+        <div class="info-section text-start"> <!-- Section containing detailed profile information -->
+
+            <h5 class="fw-semibold">Profile Details</h5> <!-- Section heading -->
+
+            <hr> <!-- Visual separator -->
+
+            <p><strong>Email:</strong> {{ user.email }}</p> <!-- Display email stored in Django User model -->
+
+            {% if user.userprofile.bio %} <!-- Only display bio if it exists -->
                 <p><strong>Bio:</strong> {{ user.userprofile.bio }}</p>
             {% endif %}
-            {% if user.userprofile.location %}
+
+            {% if user.userprofile.location %} <!-- Only display location if it exists -->
                 <p><strong>Location:</strong> {{ user.userprofile.location }}</p>
             {% endif %}
-            {% if user.userprofile.date_of_birth %}
+
+            {% if user.userprofile.date_of_birth %} <!-- Only display date of birth if provided -->
                 <p><strong>Date of Birth:</strong> {{ user.userprofile.date_of_birth }}</p>
             {% endif %}
+
         </div>
 
         <!-- Update Profile Button -->
-        <a href="{% url 'profile_update' %}" class="btn btn-success mt-3">Update Your Profile</a>
+        <a href="{% url 'profile_update' %}" class="btn btn-success mt-3">Update Your Profile</a> <!-- Link to the profile update page -->
+
     </div>
 </div>
+
 {% endblock %}

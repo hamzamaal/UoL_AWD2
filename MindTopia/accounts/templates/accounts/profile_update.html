@@ -1,32 +1,67 @@
+<!-- Extend the base template so this page uses the common site layout -->
 {% extends "base.html" %}
+
+<!-- Load Crispy Forms so Django forms can be rendered with Bootstrap styling -->
 {% load crispy_forms_tags %}
+
+<!-- Load static files such as CSS -->
 {% load static %}
 
+<!-- Page head section -->
 {% block head %}
+
 <title>Update Your Info!</title>
+
+<!-- Link to the custom stylesheet used on this page -->
 <link rel="stylesheet" type="text/css" href="{% static 'css/forum.css' %}">
+
 {% endblock %}
 
+<!-- Main page content -->
 {% block content %}
+
+<!-- Bootstrap container to add spacing and keep content centered -->
 <div class="container py-5">
+
+    <!-- Row used to center the card horizontally -->
     <div class="row justify-content-center">
+
+        <!-- Column width for better layout on medium and large screens -->
         <div class="col-md-8">
+
+            <!-- Card component used to visually group the profile update section -->
             <div class="card shadow-sm border-0 p-4">
+
+                <!-- Section displaying the current user's profile image -->
                 <div class="text-center">
-                    <img class="rounded-circle img-fluid mb-3" src="{{ user.profile.image.url }}" alt="Profile Image" width="150" height="150">
+                    <img class="rounded-circle img-fluid mb-3" src="{{ user.userprofile.image.url }}" alt="Profile Image" >
                 </div>
+
+                <!-- Heading for the profile update section -->
                 <h3 class="text-center fw-bold mb-4">Profile Info</h3>
 
+                <!-- Form used to update user and profile information -->
                 <form method="POST" enctype="multipart/form-data">
+
+                    <!-- CSRF token required for security in Django forms -->
                     {% csrf_token %}
+
+                    <!-- Render the user update form -->
                     {{ u_form|crispy }}
+
+                    <!-- Render the profile update form -->
                     {{ p_form|crispy }}
+
+                    <!-- Container for the submit button -->
                     <div class="d-grid">
                         <button class="btn btn-primary mt-3" type="submit">Update</button>
                     </div>
+
                 </form>
+
             </div>
         </div>
     </div>
 </div>
+
 {% endblock content %}
