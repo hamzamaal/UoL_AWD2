@@ -1,67 +1,48 @@
-<!-- Extend the base template so this page uses the main site layout -->
 {% extends 'base.html' %}
-
-<!-- Load Crispy Forms for consistent Bootstrap form rendering -->
 {% load crispy_forms_tags %}
 
 {% block content %}
-<!-- Main container for the teacher dashboard page -->
-<div class="container py-5">
+<div class="mb-4">
+    <h2 class="section-title text-center">Teacher Dashboard</h2>
+    <p class="section-subtitle text-center">Search users quickly and review profile cards in a cleaner dashboard layout.</p>
+</div>
 
-    <!-- Page heading -->
-    <h2 class="text-center fw-bold">Teacher Dashboard</h2>
-
-    <!-- Search form used to filter users by name or role -->
-    <form method="GET" action="{% url 'teacher_dashboard' %}" class="mb-4">
-        <div class="input-group">
-            <!-- Input field for entering search text -->
-            <input type="text" name="q" class="form-control" placeholder="Search by name or role..." value="{{ query }}">
-            
-            <!-- Button to submit the search request -->
-            <button type="submit" class="btn btn-primary">Search</button>
+<div class="search-toolbar">
+    <div class="row align-items-center g-3">
+        <div class="col-md-8">
+            <label for="dashboardSearch" class="form-label fw-semibold">Search by username, name or role</label>
+            <input id="dashboardSearch" type="text" name="q" class="form-control form-control-lg" placeholder="Search users..." value="{{ query }}">
         </div>
-    </form>
-
-    <!-- Section displaying search results -->
-    <div class="row">
-
-        <!-- Check if users were returned from the search -->
-        {% if users %}
-
-            <!-- Loop through each user returned from the query -->
-            {% for user in users %}
-
-                <!-- Column layout for each user card -->
-                <div class="col-md-4">
-                    <div class="card shadow-sm border-0">
-
-                        <!-- Display the user's profile image -->
-                        <img src="{{ user.image.url }}" class="card-img-top img-fluid rounded" alt="{{ user.user.username }}">
-
-                        <div class="card-body text-center">
-
-                            <!-- Display the username -->
-                            <h5 class="card-title fw-bold">{{ user.user.username }}</h5>
-
-                            <!-- Display the user's full name from the User model -->
-                            <p class="text-muted">{{ user.user.first_name }} {{ user.user.last_name }}</p>
-
-                            <!-- Display the user's role -->
-                            <span class="badge bg-info">{{ user.role|title }}</span>
-
-                        </div>
-                    </div>
-                </div>
-
-            {% endfor %}
-
-        {% else %}
-
-            <!-- Message shown if no users match the search -->
-            <p class="text-center text-muted">No users found.</p>
-
-        {% endif %}
+        <div class="col-md-4">
+            <div class="h-100 d-flex align-items-end justify-content-md-end">
+                <div id="resultCount" class="result-chip"></div>
+            </div>
+        </div>
     </div>
 </div>
 
+<div class="row g-4">
+    {% if users %}
+        {% for user in users %}
+            <div class="col-lg-4 col-md-6" data-search-card data-search-text="{{ user.user.username }} {{ user.user.first_name }} {{ user.user.last_name }} {{ user.role }}">
+                <div class="card border-0 section-card h-100 hover-card overflow-hidden">
+                    <img src="{{ user.image.url }}" class="forum-card-img" alt="{{ user.user.username }}">
+                    <div class="card-body text-center p-4">
+                        <h5 class="fw-bold mb-2">{{ user.user.username }}</h5>
+                        <p class="text-muted mb-2">{{ user.user.first_name }} {{ user.user.last_name }}</p>
+                        <span class="badge text-bg-info rounded-pill px-3 py-2">{{ user.role|title }}</span>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    {% else %}
+        <div class="col-12">
+            <div class="empty-state">
+                <i class="fas fa-users"></i>
+                <h5 class="fw-bold">No users found</h5>
+                <p class="text-muted mb-0">No user records are currently available in the dashboard.</p>
+            </div>
+        </div>
+    {% endif %}
+</div>
 {% endblock %}

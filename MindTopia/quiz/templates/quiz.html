@@ -2,53 +2,75 @@
 {% load static %}
 
 {% block head %}
-    <link rel="shortcut icon" href="{% static 'img/favicon.ico' %}" type="image/x-icon">
-    <title>Miscellaneous Quiz</title>
-    <link rel="stylesheet" href="{% static 'css/forum.css' %}">
-    <script src="{% static 'js/quiz.js' %}"></script>
+<title>MindTopia Quiz</title>
+<script src="{% static 'js/quiz.js' %}"></script>
 {% endblock %}
 
 {% block content %}
-<div class="container py-5">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="card shadow-sm border-0 p-4">
-                <div class="text-center">
-                    <a href="/questions" class="btn btn-secondary mb-3">Reset</a>
-                    <h1 class="fw-bold">Objective Test Questions</h1>
-                    <p class="text-muted">Test your knowledge</p>
+<section class="page-hero" style="background-image: url('{% static 'img/slide-3.jpg' %}');">
+    <div class="page-hero-content">
+        <h1>Interactive Quiz</h1>
+        <p class="mb-0">Test your knowledge with instant feedback and a clearer result summary.</p>
+    </div>
+</section>
+
+<div class="row justify-content-center">
+    <div class="col-lg-9">
+        <div class="form-shell">
+            <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
+                <div>
+                    <h2 class="section-title mb-1">Objective Test Questions</h2>
+                    <p class="section-subtitle mb-0">Answer every question, then submit to view your score.</p>
                 </div>
-
-                <div id="results"></div>
-
-                <form name="quizForm" onsubmit="return submitAnswers(answers=[{% for q in questions %}'{{ q.answer }}',{% endfor %}])">
-                    {% for q in questions %}
-                    <div class="mb-4">
-                        <h5 class="fw-bold">{{ q.id }}. {{ q.question }}</h5>
-                        <div class="form-check">
-                            <input class="form-check-input" type="radio" name="q{{ q.id }}" value="a" id="q{{ q.id }}a">
-                            <label class="form-check-label" for="q{{ q.id }}a">a. {{ q.option1 }}</label>
-                        </div>
-                        <div class="form-check">
-                            <input class="form-check-input" type="radio" name="q{{ q.id }}" value="b" id="q{{ q.id }}b">
-                            <label class="form-check-label" for="q{{ q.id }}b">b. {{ q.option2 }}</label>
-                        </div>
-                        <div class="form-check">
-                            <input class="form-check-input" type="radio" name="q{{ q.id }}" value="c" id="q{{ q.id }}c">
-                            <label class="form-check-label" for="q{{ q.id }}c">c. {{ q.option3 }}</label>
-                        </div>
-                        <div class="form-check">
-                            <input class="form-check-input" type="radio" name="q{{ q.id }}" value="d" id="q{{ q.id }}d">
-                            <label class="form-check-label" for="q{{ q.id }}d">d. {{ q.option4 }}</label>
-                        </div>
-                    </div>
-                    {% endfor %}
-
-                    <div class="text-center">
-                        <button class="btn btn-primary mt-3" type="submit">Submit</button>
-                    </div>
-                </form>
+                <a href="/questions" class="btn btn-outline-secondary rounded-pill px-4">Reset Quiz</a>
             </div>
+
+            <div id="quizResultCard" class="card quiz-result-card">
+                <div class="card-body d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
+                    <div id="quizResultText" class="fw-semibold mb-0"></div>
+                    <span id="quizResultBadge" class="badge text-bg-dark rounded-pill px-3 py-2">Pending</span>
+                </div>
+            </div>
+
+            <form name="quizForm" onsubmit="return submitAnswers(answers=[{% for q in questions %}'{{ q.answer }}'{% if not forloop.last %}, {% endif %}{% endfor %}])">
+                {% for q in questions %}
+                <div class="quiz-answer-block mb-4" data-question-index="{{ forloop.counter }}">
+                    <h5 class="fw-bold mb-3">{{ forloop.counter }}. {{ q.question }}</h5>
+
+                    <div class="form-check mb-2">
+                        <input class="form-check-input" type="radio" name="q{{ forloop.counter }}" value="a" id="q{{ forloop.counter }}a">
+                        <label class="form-check-label" for="q{{ forloop.counter }}a">a. {{ q.option1 }}</label>
+                    </div>
+
+                    <div class="form-check mb-2">
+                        <input class="form-check-input" type="radio" name="q{{ forloop.counter }}" value="b" id="q{{ forloop.counter }}b">
+                        <label class="form-check-label" for="q{{ forloop.counter }}b">b. {{ q.option2 }}</label>
+                    </div>
+
+                    <div class="form-check mb-2">
+                        <input class="form-check-input" type="radio" name="q{{ forloop.counter }}" value="c" id="q{{ forloop.counter }}c">
+                        <label class="form-check-label" for="q{{ forloop.counter }}c">c. {{ q.option3 }}</label>
+                    </div>
+
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="q{{ forloop.counter }}" value="d" id="q{{ forloop.counter }}d">
+                        <label class="form-check-label" for="q{{ forloop.counter }}d">d. {{ q.option4 }}</label>
+                    </div>
+                </div>
+                {% empty %}
+                <div class="empty-state">
+                    <i class="fas fa-circle-question"></i>
+                    <h5 class="fw-bold">No quiz questions available</h5>
+                    <p class="text-muted mb-0">Add quiz content to start using this section.</p>
+                </div>
+                {% endfor %}
+
+                {% if questions %}
+                <div class="text-center mt-4">
+                    <button class="btn btn-primary btn-lg rounded-pill px-5" type="submit">Submit Answers</button>
+                </div>
+                {% endif %}
+            </form>
         </div>
     </div>
 </div>

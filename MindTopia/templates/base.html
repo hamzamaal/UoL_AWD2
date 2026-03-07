@@ -7,169 +7,140 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <!-- Page Title -->
-    {% block head %}<title>MindTopia | Free Learning</title>{% endblock %}
+    {% block head %}
+    <title>MindTopia | Free Learning</title>
+    {% endblock %}
 
-    <!-- Bootstrap 5 CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
 
-    <!-- FontAwesome Icons -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-
-    <!-- Custom Styles -->
     <link href="{% static 'css/style.css' %}" rel="stylesheet">
     <link href="{% static 'main.css' %}" rel="stylesheet">
-
-    <style>
-        /* Navbar Styling */
-        .navbar {
-            background: linear-gradient(135deg, #2c3e50, #4ca1af);
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-        }
-        .navbar-brand img {
-            transition: transform 0.3s;
-        }
-        .navbar-brand img:hover {
-            transform: scale(1.1);
-        }
-        .nav-link {
-            font-weight: 500;
-            color: #fff !important;
-            transition: color 0.3s, transform 0.2s;
-        }
-        .nav-link:hover {
-            color: #f1c40f !important;
-            transform: scale(1.05);
-        }
-        .dropdown-menu {
-            border-radius: 10px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-        }
-
-        /* Main Container Styling */
-        .main-container {
-            background: #fff;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            padding: 30px;
-            margin-top: 40px;
-        }
-
-        /* Footer Styling */
-        .footer {
-            background: linear-gradient(135deg, #2c3e50, #4ca1af);
-            color: white;
-            padding: 15px;
-            font-size: 14px;
-        }
-    </style>
 </head>
 
-<body>
+<body class="app-body">
 
-<!-- Navbar -->
-<nav class="navbar navbar-expand-lg navbar-dark fixed-top">
+<nav class="navbar navbar-expand-lg navbar-dark app-navbar sticky-top">
     <div class="container">
-        <!-- Logo -->
-        <a class="navbar-brand" href="{% if user.is_authenticated %}{% url 'user_home' user.username %}{% else %}{% url 'home' %}{% endif %}">
-            <img src="{% static 'img/site-logo.png' %}" alt="MindTopia Logo" height="60">
+        <a class="navbar-brand d-flex align-items-center" href="{% url 'home' %}">
+            <img src="{% static 'img/site-logo.png' %}" alt="MindTopia Logo" height="52">
         </a>
 
-        <!-- Navbar Toggler -->
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" 
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
                 aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
 
-        <!-- Navbar Links -->
-        <div class="collapse navbar-collapse justify-content-center" id="navbarNav">
-            <ul class="navbar-nav">
-                <!-- Home Link (Redirects to user home if logged in) -->
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto align-items-lg-center gap-lg-2">
+
                 <li class="nav-item">
-                    <a class="nav-link active" href="{% if user.is_authenticated %}{% url 'user_home' user.username %}{% else %}{% url 'home' %}{% endif %}">
+                    <a class="nav-link {% if request.resolver_match.url_name == 'home' or request.resolver_match.url_name == 'user_home' or request.resolver_match.url_name == 'user_home_username' %}active{% endif %}"
+                       href="{% if request.user.is_authenticated %}{% url 'user_home_username' request.user.username %}{% else %}{% url 'home' %}{% endif %}">
                         Home
                     </a>
                 </li>
-                <li class="nav-item"><a class="nav-link" href="{% url 'about' %}">About</a></li>
-                
-                <!-- Course Material Dropdown -->
+
+                <li class="nav-item">
+                    <a class="nav-link {% if request.resolver_match.url_name == 'about' %}active{% endif %}" href="{% url 'about' %}">
+                        About
+                    </a>
+                </li>
+
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="courseDropdown" role="button" data-bs-toggle="dropdown"
-                       aria-expanded="false">Course Material</a>
-                    <ul class="dropdown-menu" aria-labelledby="courseDropdown">
+                    <a class="nav-link dropdown-toggle {% if request.resolver_match.url_name == 'courses' or request.resolver_match.url_name == 'course_detail' or request.resolver_match.url_name == 'questions' or request.resolver_match.url_name == 'instructors' %}active{% endif %}"
+                       href="#" id="courseDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Learning
+                    </a>
+                    <ul class="dropdown-menu shadow-sm border-0">
                         <li><a class="dropdown-item" href="{% url 'courses' %}">Courses</a></li>
                         <li><a class="dropdown-item" href="{% url 'questions' %}">Quiz</a></li>
-                        <li><a class="dropdown-item" href="{% url 'instructors' %}">Instructor</a></li>
+                        <li><a class="dropdown-item" href="{% url 'instructors' %}">Instructors</a></li>
                     </ul>
                 </li>
 
-                <li class="nav-item"><a class="nav-link" href="{% url 'forum' %}">Forum</a></li>
+                <li class="nav-item">
+                    <a class="nav-link {% if request.resolver_match.url_name == 'forum' or request.resolver_match.url_name == 'post-detail' or request.resolver_match.url_name == 'post-create' or request.resolver_match.url_name == 'post-update' %}active{% endif %}"
+                       href="{% url 'forum' %}">
+                        Forum
+                    </a>
+                </li>
 
-                <!-- Contact Us Dropdown -->
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="contactDropdown" role="button" data-bs-toggle="dropdown"
-                       aria-expanded="false">Contact Us</a>
-                    <ul class="dropdown-menu" aria-labelledby="contactDropdown">
+                    <a class="nav-link dropdown-toggle {% if request.resolver_match.url_name == 'donate' or request.resolver_match.url_name == 'feedback' %}active{% endif %}"
+                       href="#" id="contactDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Support
+                    </a>
+                    <ul class="dropdown-menu shadow-sm border-0">
                         <li><a class="dropdown-item" href="{% url 'donate' %}">Make a Donation</a></li>
                         <li><a class="dropdown-item" href="{% url 'feedback' %}?next=/">Feedback</a></li>
                     </ul>
                 </li>
 
-                {% if user.is_authenticated %}
-                {% if user.userprofile.role == "teacher" %}
-                <li class="nav-item"><a class="nav-link" href="{% url 'teacher_dashboard' %}">Teacher Dashboard</a></li>
-                {% endif %}
-                
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown"
-                       aria-expanded="false">{{ request.user.username }}</a>
-                    <ul class="dropdown-menu" aria-labelledby="userDropdown">
-                        <li><a class="dropdown-item" href="{% url 'profile' %}">Profile</a></li>
-                        <li><a class="dropdown-item" href="{% url 'logout' %}?next=/">Logout</a></li>
-                    </ul>
-                </li>
+                {% if request.user.is_authenticated %}
+                    {% if request.user.userprofile.role == "teacher" %}
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.resolver_match.url_name == 'teacher_dashboard' %}active{% endif %}" href="{% url 'teacher_dashboard' %}">
+                            Teacher Dashboard
+                        </a>
+                    </li>
+                    {% endif %}
+
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle {% if request.resolver_match.url_name == 'profile' or request.resolver_match.url_name == 'profile_update' %}active{% endif %}"
+                           href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            {{ request.user.username }}
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0">
+                            <li><a class="dropdown-item" href="{% url 'profile' %}">Profile</a></li>
+                            <li><a class="dropdown-item" href="{% url 'logout' %}?next=/">Logout</a></li>
+                        </ul>
+                    </li>
                 {% else %}
-                <li class="nav-item"><a class="nav-link" href="{% url 'register' %}">Register</a></li>
-                <li class="nav-item"><a class="nav-link" href="{% url 'login' %}">Login</a></li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.resolver_match.url_name == 'register' %}active{% endif %}" href="{% url 'register' %}">
+                            Register
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="btn btn-light btn-sm rounded-pill px-3 ms-lg-2" href="{% url 'login' %}">
+                            Login
+                        </a>
+                    </li>
                 {% endif %}
             </ul>
         </div>
     </div>
 </nav>
 
-<!-- Main Content -->
-<div class="container main-container">
-    {% if messages %}
-        {% for message in messages %}
-            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
-                {{ message }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
-        {% endfor %}
-    {% endif %}
+<main class="app-main">
+    <div class="container py-4">
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }} alert-dismissible fade show app-alert" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            {% endfor %}
+        {% endif %}
 
-    {% block content %}{% endblock %}
-</div>
+        {% block content %}{% endblock %}
+    </div>
+</main>
 
-<!-- Footer -->
-<footer class="footer text-center">
-    <div class="container">
-        <span>&copy; 2024 MindTopia | Empowering Free Learning</span>
+<footer class="app-footer">
+    <div class="container text-center">
+        <p class="mb-1 fw-semibold">MindTopia</p>
+        <p class="mb-0 small">&copy; 2025 MindTopia | Empowering free learning through accessible digital education</p>
     </div>
 </footer>
 
-<!-- Bootstrap 5 JS (Ensures dropdowns work on all pages) -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" defer></script>
+<button type="button" class="back-to-top-btn" id="backToTopBtn" aria-label="Back to top">
+    <i class="fas fa-arrow-up"></i>
+</button>
 
-<!-- Fix for Dropdowns Not Working -->
-<script>
-    document.addEventListener("DOMContentLoaded", function () {
-        var dropdownElements = document.querySelectorAll('.dropdown-toggle');
-        dropdownElements.forEach(function (dropdown) {
-            new bootstrap.Dropdown(dropdown);
-        });
-    });
-</script>
-
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="{% static 'js/main.js' %}"></script>
+{% block scripts %}{% endblock %}
 </body>
 </html>
