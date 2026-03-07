@@ -48,6 +48,7 @@ urlpatterns = [
     # Courses & Course Details
     path('courses/', c.courses, name='courses'),
     path('course/<int:course_id>/', c.course_detail, name='course_detail'),
+    path('course/<int:course_id>/register/', c.register_course, name='register_course'),
     path('course/<int:course_id>/feedback/', c.submit_feedback, name='submit_feedback'),
 
     #  Include Forum URLs (Ensures chat URL is accessible)
@@ -80,3 +81,4 @@ urlpatterns = format_suffix_patterns(urlpatterns)
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
     urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+    

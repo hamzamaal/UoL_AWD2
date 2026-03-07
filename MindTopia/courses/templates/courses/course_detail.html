@@ -31,10 +31,26 @@
             {% endif %}
 
             {% if course.url and course.url != "#" %}
-            <p class="mb-0">
+            <p class="mb-3">
                 <strong>External Resource:</strong>
                 <a href="{{ course.url }}" class="text-decoration-none" target="_blank">Open link</a>
             </p>
+            {% endif %}
+
+            {% if request.user.is_authenticated and request.user.userprofile.role == 'student' %}
+                <div class="mt-4">
+                    {% if is_registered %}
+                        <span class="badge text-bg-success rounded-pill px-3 py-2">Already Registered</span>
+                    {% else %}
+                        <a href="{% url 'register_course' course.id %}" class="btn btn-success rounded-pill px-4">
+                            Register for this Course
+                        </a>
+                    {% endif %}
+                </div>
+            {% elif request.user.is_authenticated and request.user.userprofile.role == 'teacher' %}
+                <div class="mt-4">
+                    <span class="badge text-bg-secondary rounded-pill px-3 py-2">Teachers cannot register for courses</span>
+                </div>
             {% endif %}
         </div>
     </div>
@@ -50,10 +66,12 @@
         <div id="videoCollapse" class="accordion-collapse collapse show" data-bs-parent="#courseAccordion">
             <div class="accordion-body">
                 {% if course.video %}
-                <video class="w-100 rounded" controls>
-                    <source src="{{ course.video.url }}" type="video/mp4">
-                    Your browser does not support the video tag.
-                </video>
+                <div class="ratio ratio-16x9">
+                    <video class="rounded" controls>
+                        <source src="{{ course.video.url }}" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
+                </div>
                 {% else %}
                 <div class="empty-state">
                     <i class="fas fa-video"></i>
@@ -139,4 +157,9 @@
     <div class="empty-state">
         <i class="fas fa-lock"></i>
         <h5 class="fw-bold">Login required</h5>
-        <p class="text-muted mb-3">Please log in to leave feedback on this course
+        <p class="text-muted mb-3">Please log in to leave feedback on this course.</p>
+        <a href="{% url 'login' %}" class="btn btn-secondary rounded-pill px-4">Login</a>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

@@ -8,6 +8,9 @@ urlpatterns = [
     # Course Detail Page (Handles Viewing)
     path('course/<int:course_id>/', views.course_detail, name='course_detail'),
 
-    # Fix: Feedback Submission URL
+    # Course Registration (Students enroll in course)
+    path('course/<int:course_id>/register/', views.register_course, name='register_course'),
+
+    # Feedback Submission
     path('course/<int:course_id>/submit_feedback/', views.submit_feedback, name='submit_feedback'),
 ]

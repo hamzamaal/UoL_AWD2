@@ -59,17 +59,18 @@ def is_teacher(user):
 
 @user_passes_test(is_teacher)
 def teacher_dashboard(request):
-    """Allows teachers to search for students and other teachers"""
+    """Allows teachers to search for students only"""
     
     query = request.GET.get('q', '')  # Get the search query from the request
-    users = UserProfile.objects.all()  # Default: Show all users
+
+    # Only show student profiles
+    users = UserProfile.objects.filter(role='student')
 
     if query:
         users = users.filter(
             Q(user__username__icontains=query) |  # Search by username
             Q(user__first_name__icontains=query) |  # Search by first name from the User model
-            Q(user__last_name__icontains=query) |  # Search by last name from the User model
-            Q(role__icontains=query)  # Search by role (e.g., "student" or "teacher")
+            Q(user__last_name__icontains=query)  # Search by last name from the User model
         )
 
     return render(request, 'accounts/teacher_dashboard.html', {
