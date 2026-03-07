@@ -1,8 +1,12 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from rest_framework import generics
+from rest_framework.permissions import AllowAny
 from .models import Course, CourseFeedback
 from .forms import CourseFeedbackForm
+from .serializers import CourseSerializer, CourseFeedbackSerializer
+from accounts.permissions import IsTeacherUser
 
 
 def courses(request):
@@ -84,3 +88,29 @@ def submit_feedback(request, course_id):
             messages.error(request, "Error submitting feedback. Please try again.")
 
     return redirect('course_detail', course_id=course.id)
+
+
+# Public API endpoint
+class CourseListApiView(generics.ListAPIView):
+    """Returns all courses (Public)"""
+    queryset = Course.objects.all().order_by('title')
+    serializer_class = CourseSerializer
+    permission_classes = [AllowAny]
+
+
+# Public API endpoint
+class CourseDetailApiView(generics.RetrieveAPIView):
+    """Returns one course by primary key (Public)"""
+    queryset = Course.objects.all()
+    serializer_class = CourseSerializer
+    permission_classes = [AllowAny]
+
+
+# Teacher-only secure API endpoint
+class CourseFeedbackListApiView(generics.ListAPIView):
+    """Returns feedback for a given course (Teacher access only)"""
+    serializer_class = CourseFeedbackSerializer
+    permission_classes = [IsTeacherUser]
+
+    def get_queryset(self):
+        return CourseFeedback.objects.filter(course_id=self.kwargs['course_id']).order_by('-created_at')

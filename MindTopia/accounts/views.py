@@ -2,23 +2,22 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required, user_passes_test
-from django.contrib.auth.models import User  #  FIXED: Import User model
-from django.db.models import Q  #  FIXED: Import Q for advanced search queries
+from django.contrib.auth.models import User
+from django.db.models import Q
 from rest_framework import generics
-from rest_framework.permissions import IsAuthenticated
 from .models import UserProfile
 from .serializers import UserSerializer, UserProfileSerializer
 from .forms import UserRegisterForm, UserUpdateForm, ProfileUpdateForm, StatusUpdateForm
+from .permissions import IsTeacherUser
 
 
-#  User Registration View
+# User Registration View
 def register(request):
     """Handles user registration with default role as student"""
     if request.method == 'POST':
         form = UserRegisterForm(request.POST)
         if form.is_valid():
-            user = form.save()
-            #UserProfile.objects.create(user=user, role='student')
+            form.save()
             messages.success(request, 'Account created successfully! You can now log in.')
             return redirect('login')
     else:
@@ -29,8 +28,7 @@ def register(request):
 @login_required
 def profile(request):
     """Displays the user's profile page"""
-    return render(request, 'accounts/profile.html')  # ✅ Ensure this matches the template path
-
+    return render(request, 'accounts/profile.html')
 
 
 @login_required
@@ -52,7 +50,7 @@ def profile_update(request):
     return render(request, 'accounts/profile_update.html', {'u_form': u_form, 'p_form': p_form})
 
 
-#  Check if user is a teacher
+# Check if user is a teacher
 def is_teacher(user):
     return hasattr(user, 'userprofile') and user.userprofile.role == 'teacher'
 
@@ -60,17 +58,16 @@ def is_teacher(user):
 @user_passes_test(is_teacher)
 def teacher_dashboard(request):
     """Allows teachers to search for students only"""
-    
-    query = request.GET.get('q', '')  # Get the search query from the request
+    query = request.GET.get('q', '')
 
     # Only show student profiles
     users = UserProfile.objects.filter(role='student')
 
     if query:
         users = users.filter(
-            Q(user__username__icontains=query) |  # Search by username
-            Q(user__first_name__icontains=query) |  # Search by first name from the User model
-            Q(user__last_name__icontains=query)  # Search by last name from the User model
+            Q(user__username__icontains=query) |
+            Q(user__first_name__icontains=query) |
+            Q(user__last_name__icontains=query)
         )
 
     return render(request, 'accounts/teacher_dashboard.html', {
@@ -105,20 +102,28 @@ def user_home(request, username=None, *args, **kwargs):
     })
 
 
-
-#  API View to List All Users
+# API View to List All Users - teacher only
 class UserListView(generics.ListAPIView):
-    """Returns a list of all users (Requires Authentication)"""
-    queryset = User.objects.all()
+    """Returns a list of all users (Teacher access only)"""
+    queryset = User.objects.all().order_by('username')
     serializer_class = UserSerializer
-    permission_classes = [IsAuthenticated]  # Ensures only logged-in users can access
+    permission_classes = [IsTeacherUser]
 
 
-#  API View to Retrieve a Specific UserProfile
-class UserProfileDetailView(generics.RetrieveAPIView):
-    """Retrieve a user's profile by username"""
-    queryset = UserProfile.objects.all()
+# API View to List Student Profiles Only - teacher only
+class StudentListView(generics.ListAPIView):
+    """Returns a list of student profiles only (Teacher access only)"""
+    queryset = UserProfile.objects.filter(role='student').select_related('user').order_by('user__username')
     serializer_class = UserProfileSerializer
-    permission_classes = [IsAuthenticated]
-    lookup_field = 'user__username'  # Allows lookup via username
-    
+    permission_classes = [IsTeacherUser]
+
+
+# API View to Retrieve a Specific UserProfile - teacher only
+class UserProfileDetailView(generics.RetrieveAPIView):
+    """Retrieve a user's profile by username (Teacher access only)"""
+    serializer_class = UserProfileSerializer
+    permission_classes = [IsTeacherUser]
+
+    def get_object(self):
+        username = self.kwargs['username']
+        return get_object_or_404(UserProfile.objects.select_related('user'), user__username=username)

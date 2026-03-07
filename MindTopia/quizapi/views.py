@@ -1,16 +1,30 @@
-from django.shortcuts import render, get_object_or_404
-from rest_framework.views import APIView
-from rest_framework.response import Response
-from rest_framework import status
+from rest_framework import generics
+from rest_framework.permissions import AllowAny
 from quiz.models import Quiz
 from .serializers import QuizApiSerializer
 
-class QuizApiList(APIView):
 
-	def get(self, request):
-		quizapis = Quiz.objects.all()
-		serializer = QuizApiSerializer(quizapis, many = True)
-		return Response(serializer.data)
+# Public API endpoint
+class QuizApiList(generics.ListAPIView):
+    """Returns all quiz questions (Public)"""
+    queryset = Quiz.objects.all().order_by('id')
+    serializer_class = QuizApiSerializer
+    permission_classes = [AllowAny]
 
-	def post(self):
-		pass
+
+# Public API endpoint
+class QuizApiDetail(generics.RetrieveAPIView):
+    """Returns one quiz question by primary key (Public)"""
+    queryset = Quiz.objects.all()
+    serializer_class = QuizApiSerializer
+    permission_classes = [AllowAny]
+
+
+# Public API endpoint
+class QuizByCourseApiList(generics.ListAPIView):
+    """Returns quiz questions for one course (Public)"""
+    serializer_class = QuizApiSerializer
+    permission_classes = [AllowAny]
+
+    def get_queryset(self):
+        return Quiz.objects.filter(course_id=self.kwargs['course_id']).order_by('id')

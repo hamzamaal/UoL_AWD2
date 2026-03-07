@@ -10,10 +10,8 @@ from .models import UserProfile
 
 # Serializer used to convert User model data into JSON format
 class UserSerializer(serializers.ModelSerializer):
-
     """Serializes User model"""
 
-    # Meta class defining model and fields included in serialization
     class Meta:
         model = User
         fields = ['id', 'username', 'email', 'first_name', 'last_name']
@@ -21,13 +19,11 @@ class UserSerializer(serializers.ModelSerializer):
 
 # Serializer used to convert UserProfile model data into JSON format
 class UserProfileSerializer(serializers.ModelSerializer):
-
     """Serializes UserProfile model"""
 
     # Include nested serialized user data within the profile
-    user = UserSerializer(read_only=True)  # Nested user data
+    user = UserSerializer(read_only=True)
 
-    # Meta class defining model and fields included in serialization
     class Meta:
         model = UserProfile
-        fields = ['user', 'role', 'bio', 'location', 'date_of_birth', 'image']
+        fields = ['id', 'user', 'role', 'bio', 'location', 'date_of_birth', 'image', 'status_update']

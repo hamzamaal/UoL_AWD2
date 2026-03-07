@@ -5,11 +5,7 @@ from . import views
 urlpatterns = [
     # User Registration & Authentication
     path('register/', views.register, name='register'),
-
-    #  Use Django's built-in LoginView
     path('login/', auth_views.LoginView.as_view(template_name='login.html'), name='login'),
-
-    #  Use Django's built-in LogoutView
     path('logout/', auth_views.LogoutView.as_view(template_name='logout.html'), name='logout'),
 
     # User Profile & Home Pages
@@ -23,5 +19,6 @@ urlpatterns = [
 
     # User API Endpoints
     path('api/users/', views.UserListView.as_view(), name='api_users'),
+    path('api/students/', views.StudentListView.as_view(), name='api_students'),
     path('api/user/<str:username>/', views.UserProfileDetailView.as_view(), name='api_user_profile'),
 ]
