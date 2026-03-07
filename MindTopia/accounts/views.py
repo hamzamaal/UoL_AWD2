@@ -67,8 +67,8 @@ def teacher_dashboard(request):
     if query:
         users = users.filter(
             Q(user__username__icontains=query) |  # Search by username
-            Q(first_name__icontains=query) |  # Search by first name
-            Q(last_name__icontains=query) |  # Search by last name
+            Q(user__first_name__icontains=query) |  # Search by first name from the User model
+            Q(user__last_name__icontains=query) |  # Search by last name from the User model
             Q(role__icontains=query)  # Search by role (e.g., "student" or "teacher")
         )
 
@@ -120,3 +120,4 @@ class UserProfileDetailView(generics.RetrieveAPIView):
     serializer_class = UserProfileSerializer
     permission_classes = [IsAuthenticated]
     lookup_field = 'user__username'  # Allows lookup via username
+    

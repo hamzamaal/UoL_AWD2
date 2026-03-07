@@ -46,6 +46,7 @@ class UserRegisterForm(UserCreationForm):
         # Assign first and last name values from the cleaned form data
         user.first_name = self.cleaned_data.get("first_name", "")
         user.last_name = self.cleaned_data.get("last_name", "")
+        user.email = self.cleaned_data.get("email", "")
 
         # Save the user object if commit is True
         if commit:
@@ -56,10 +57,6 @@ class UserRegisterForm(UserCreationForm):
 
             # Assign the selected role to the profile
             profile.role = self.cleaned_data["role"]
-
-            # Copy the first and last name values to the profile model
-            profile.first_name = user.first_name
-            profile.last_name = user.last_name
 
             # Save the updated profile to the database
             profile.save()

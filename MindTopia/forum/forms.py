@@ -6,6 +6,3 @@ class CommentForm(forms.ModelForm):
 	class Meta:
 		model=Comment
 		exclude= ('author', 'post', 'date_posted', 'approved_comment',)
-
-
-	

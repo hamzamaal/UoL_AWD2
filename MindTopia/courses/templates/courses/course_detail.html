@@ -57,7 +57,7 @@
         <div class="col-md-8">
             <h2 class="fw-bold">Description</h2>
             <p class="text-muted lead">{{ course.description }}</p>
-            <h5 class="fw-semibold">Instructor: <span class="text-primary">{{ course.instructor }}</span></h5>
+            <h5 class="fw-semibold">Instructor: <span class="text-primary">{{ course.instructor.name }}</span></h5>
         </div>
     </div>
 
@@ -152,3 +152,4 @@
 </div>
 
 {% endblock %}
+

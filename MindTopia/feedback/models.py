@@ -1,6 +1,6 @@
 from django.core.validators import RegexValidator
-
 from django.db import models
+from django.contrib.auth.models import User
 
 
 class Feedback(models.Model):
@@ -16,9 +16,7 @@ class Feedback(models.Model):
 					('e', '5'),
 				)
 
-	first_name = models.CharField(max_length=50)
-	last_name = models.CharField(max_length=50)
-	email = models.EmailField()
+	user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
 	ui = models.CharField("Did you like UI of our website", max_length=30, choices = choice)
 	sug = models.TextField("Suggest some changes in the website", default="")
 	satisfy = models.CharField("Are you satisfied with course content",  max_length=30, choices = choice)
@@ -26,4 +24,6 @@ class Feedback(models.Model):
 	rating = models.CharField("Rate your experience", max_length=10, choices = cc)
 	
 	def __str__(self):
-		return self.first_name + " " + self.last_name
+		if self.user:
+			return self.user.username
+		return "Anonymous Feedback"

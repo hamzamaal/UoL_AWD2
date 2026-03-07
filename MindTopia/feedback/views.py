@@ -8,7 +8,10 @@ def feed(request):
 		form = feedbackForm(request.POST)
 
 		if form.is_valid():
-			form.save()
+			feedback = form.save(commit=False)
+			if request.user.is_authenticated:
+				feedback.user = request.user
+			feedback.save()
 
 	else:
 		form = feedbackForm()

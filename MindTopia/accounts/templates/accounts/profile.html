@@ -44,7 +44,7 @@
         <img src="{{ user.userprofile.image.url }}" class="profile-img mb-3" alt="Profile Picture"> <!-- Display user's profile image stored in UserProfile model -->
 
         <!-- User Info -->
-        <h2 class="fw-bold">{{ user.userprofile.first_name }} {{ user.userprofile.last_name }}</h2> <!-- Display user's first and last name -->
+        <h2 class="fw-bold">{{ user.first_name }} {{ user.last_name }}</h2> <!-- Display user's first and last name from the User model -->
         <p class="text-muted">@{{ user.username }}</p> <!-- Display username with muted styling -->
         <p class="badge bg-primary">{{ user.userprofile.get_role_display }}</p> <!-- Display user role using Django model choice display -->
 

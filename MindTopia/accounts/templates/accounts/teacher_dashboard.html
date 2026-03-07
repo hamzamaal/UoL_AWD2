@@ -43,8 +43,8 @@
                             <!-- Display the username -->
                             <h5 class="card-title fw-bold">{{ user.user.username }}</h5>
 
-                            <!-- Display the user's full name -->
-                            <p class="text-muted">{{ user.first_name }} {{ user.last_name }}</p>
+                            <!-- Display the user's full name from the User model -->
+                            <p class="text-muted">{{ user.user.first_name }} {{ user.user.last_name }}</p>
 
                             <!-- Display the user's role -->
                             <span class="badge bg-info">{{ user.role|title }}</span>

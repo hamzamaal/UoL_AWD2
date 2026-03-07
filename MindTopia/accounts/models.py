@@ -26,12 +26,6 @@ class UserProfile(models.Model):
     # Store the role of the user (student or teacher)
     role = models.CharField(max_length=10, choices=ROLE_CHOICES, default='student')
 
-    # Optional field for storing the user's first name
-    first_name = models.CharField(max_length=50, blank=True, null=True)
-
-    # Optional field for storing the user's last name
-    last_name = models.CharField(max_length=50, blank=True, null=True)
-
     # Optional text field allowing users to write a short biography
     bio = models.TextField(max_length=500, blank=True, null=True)
 
