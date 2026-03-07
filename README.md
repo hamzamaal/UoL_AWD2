@@ -82,6 +82,8 @@ Example serializers:
 git clone <repository-url>
 cd UoL_AWD2
 
+##2. Create Virtual Environment
+python -m venv venv
 
 
 
