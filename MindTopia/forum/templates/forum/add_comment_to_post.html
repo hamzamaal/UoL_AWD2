@@ -3,46 +3,30 @@
 {% load static %}
 
 {% block head %}
-<!-- Page title shown in the browser tab -->
-<title>Discuss here!</title>
-
-<!-- Page-specific stylesheet -->
-<link rel="stylesheet" href="{% static 'css/forum.css' %}">
+    <title>Discuss Here!</title>
+    <link rel="stylesheet" href="{% static 'css/forum.css' %}">
 {% endblock %}
-
 
 {% block content %}
 
-<!-- Discussion form container -->
-<div class="container post-container py-5">
-    <div class="content-section">
+    <!-- Discussion form container -->
+    <div class="container post-container py-5">
+        <div class="content-section">
+            <form method="post">
+                {% csrf_token %}
 
-        <!-- Discussion submission form -->
-        <form method="post">
-            {% csrf_token %}
+                <fieldset class="form-group">
+                    <legend class="border-bottom mb-4">Discuss Here!</legend>
+                    {{ form|crispy }}
+                </fieldset>
 
-            <!-- Form field group -->
-            <fieldset class="form-group">
-                <legend class="border-bottom mb-4">
-                    Discuss Here!
-                </legend>
-
-                <!-- Render Django form using Crispy Forms -->
-                {{ form|crispy }}
-            </fieldset>
-
-            <!-- Submit button -->
-            <div class="form-group forum-btn">
-                <button
-                    type="submit"
-                    class="btn btn-outline-info forum-btn">
-                    Post
-                </button>
-            </div>
-
-        </form>
-
+                <div class="form-group forum-btn">
+                    <button class="btn btn-outline-info forum-btn" type="submit">
+                        Post
+                    </button>
+                </div>
+            </form>
+        </div>
     </div>
-</div>
 
 {% endblock %}

@@ -13,9 +13,9 @@ class PostListView(ListView):
     """Display all forum posts ordered by newest first."""
 
     model = Post
-    template_name = 'forum/forum.html'
-    context_object_name = 'posts'
-    ordering = ['-date_posted']
+    template_name = "forum/forum.html"
+    context_object_name = "posts"
+    ordering = ["-date_posted"]
 
 
 class PostDetailView(DetailView):
@@ -28,7 +28,7 @@ class PostCreateView(LoginRequiredMixin, CreateView):
     """Allow authenticated users to create a new forum post."""
 
     model = Post
-    fields = ['title', 'content']
+    fields = ["title", "content"]
 
     def form_valid(self, form):
         """Attach the current user as the post author before saving."""
@@ -40,7 +40,7 @@ class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     """Allow post authors to edit their own forum posts."""
 
     model = Post
-    fields = ['title', 'content']
+    fields = ["title", "content"]
 
     def form_valid(self, form):
         """Preserve the current user as the post author when updating."""
@@ -56,7 +56,7 @@ class PostDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     """Allow post authors to delete their own forum posts."""
 
     model = Post
-    success_url = '/discussion_forum/'
+    success_url = "/discussion_forum/"
 
     def test_func(self):
         """Restrict deletes to the original post author."""
@@ -65,23 +65,32 @@ class PostDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
 
 @login_required
 def add_comment_to_post(request, pk):
-    """Add a new comment to an existing forum post."""
+    """Display and process the form used to add a comment to a post."""
     post = get_object_or_404(Post, pk=pk)
 
-    if request.method == 'POST':
+    if request.method == "POST":
         form = CommentForm(request.POST)
+
         if form.is_valid():
             comment = form.save(commit=False)
             comment.post = post
             comment.author = request.user
             comment.save()
-            return redirect('post-detail', pk=post.pk)
+
+            return redirect("post-detail", pk=post.pk)
     else:
         form = CommentForm()
 
-    return render(request, 'forum/add_comment_to_post.html', {'form': form})
+    context = {
+        "form": form,
+        "post": post,
+    }
+    return render(request, "forum/add_comment_to_post.html", context)
 
 
 def chat_room(request, room_name):
     """Render the WebSocket chat room page for the requested room."""
-    return render(request, 'forum/chat.html', {'room_name': room_name})
+    context = {
+        "room_name": room_name,
+    }
+    return render(request, "forum/chat.html", context)

@@ -28,7 +28,7 @@ class Course(models.Model):
     url = models.CharField(max_length=255, default="#")
 
     def __str__(self):
-        """Return the course title for display in admin and logs."""
+        """Return the course title for display in admin and queries."""
         return self.title
 
 

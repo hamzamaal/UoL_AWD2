@@ -30,7 +30,11 @@
                     <div>
                         <h2 class="section-title mb-1">Objective Test Questions</h2>
                         <p class="section-subtitle mb-0">
-                            Answer every question, then submit to view your score.
+                            {% if course %}
+                                {{ course.title }} quiz. Answer every question, then submit to view your score.
+                            {% else %}
+                                Answer every question, then submit to view your score.
+                            {% endif %}
                         </p>
                     </div>
 

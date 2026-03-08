@@ -3,55 +3,37 @@
 {% load crispy_forms_tags %}
 
 {% block head %}
-<!-- Page title displayed in the browser tab -->
-<title>Give Us Your Feedback!</title>
-
-<!-- Page-specific stylesheet -->
-<link rel="stylesheet" href="{% static 'css/forum.css' %}">
+    <title>Give Us Your Feedback!</title>
+    <link rel="stylesheet" href="{% static 'css/forum.css' %}">
 {% endblock %}
-
 
 {% block content %}
 
-<!-- Feedback form container -->
-<div class="container py-5">
-    <div class="row justify-content-center">
+    <!-- Feedback form container -->
+    <div class="container py-5">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
 
-        <!-- Form column -->
-        <div class="col-md-6">
+                <!-- Feedback card -->
+                <div class="card shadow-sm border-0">
+                    <div class="card-body">
+                        <h3 class="text-center fw-bold mb-4">Send Your Feedback</h3>
 
-            <!-- Card layout for feedback form -->
-            <div class="card shadow-sm border-0">
-                <div class="card-body">
+                        <form method="post">
+                            {% csrf_token %}
+                            {{ form|crispy }}
 
-                    <!-- Form heading -->
-                    <h3 class="text-center fw-bold mb-4">
-                        Send Your Feedback
-                    </h3>
-
-                    <!-- Feedback submission form -->
-                    <form method="post">
-                        {% csrf_token %}
-
-                        <!-- Render Django form using Crispy Forms -->
-                        {{ form|crispy }}
-
-                        <!-- Submit button -->
-                        <div class="d-grid">
-                            <button
-                                type="submit"
-                                class="btn btn-primary mt-3">
-                                Send!
-                            </button>
-                        </div>
-
-                    </form>
-
+                            <div class="d-grid">
+                                <button class="btn btn-primary mt-3" type="submit">
+                                    Send!
+                                </button>
+                            </div>
+                        </form>
+                    </div>
                 </div>
-            </div>
 
+            </div>
         </div>
     </div>
-</div>
 
 {% endblock %}

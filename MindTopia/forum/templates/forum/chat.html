@@ -2,61 +2,57 @@
 
 {% block content %}
 
-<!-- Live chat container -->
-<div class="container mt-4">
-    <h2>Live Chat - Room: {{ room_name }}</h2>
+    <!-- Live chat container -->
+    <div class="container mt-4">
+        <h2>Live Chat - Room: {{ room_name }}</h2>
 
-    <!-- Message display area -->
-    <div
-        id="chat-box"
-        style="border: 1px solid #ddd; padding: 10px; height: 300px; overflow-y: scroll;"
-    ></div>
+        <div
+            id="chat-box"
+            style="border: 1px solid #ddd; padding: 10px; height: 300px; overflow-y: scroll;"
+        ></div>
 
-    <!-- Chat input controls -->
-    <input
-        type="text"
-        id="chat-message-input"
-        class="form-control mt-2"
-        placeholder="Type a message..."
-    >
+        <input
+            type="text"
+            id="chat-message-input"
+            class="form-control mt-2"
+            placeholder="Type a message..."
+        >
 
-    <button
-        id="chat-message-submit"
-        class="btn btn-primary mt-2"
-        type="button"
-    >
-        Send
-    </button>
-</div>
+        <button
+            id="chat-message-submit"
+            class="btn btn-primary mt-2"
+            type="button"
+        >
+            Send
+        </button>
+    </div>
 
-<script>
-    const roomName = "{{ room_name }}";
-    const chatBox = document.querySelector("#chat-box");
-    const messageInput = document.querySelector("#chat-message-input");
-    const messageSubmit = document.querySelector("#chat-message-submit");
+    <script>
+        const roomName = "{{ room_name }}";
+        const chatBox = document.querySelector("#chat-box");
+        const messageInput = document.querySelector("#chat-message-input");
+        const messageSubmit = document.querySelector("#chat-message-submit");
 
-    const chatSocket = new WebSocket(
-        "ws://" + window.location.host + "/ws/forum/" + roomName + "/"
-    );
+        const chatSocket = new WebSocket(
+            "ws://" + window.location.host + "/ws/forum/" + roomName + "/"
+        );
 
-    // Append incoming messages to the chat window
-    chatSocket.onmessage = function (event) {
-        const data = JSON.parse(event.data);
-        chatBox.innerHTML +=
-            "<p><strong>" + data.username + ":</strong> " + data.message + "</p>";
-    };
+        chatSocket.onmessage = function (event) {
+            const data = JSON.parse(event.data);
+            chatBox.innerHTML +=
+                "<p><strong>" + data.username + ":</strong> " + data.message + "</p>";
+        };
 
-    // Send a message through the websocket connection
-    messageSubmit.addEventListener("click", function () {
-        const message = messageInput.value;
+        messageSubmit.addEventListener("click", function () {
+            const message = messageInput.value;
 
-        chatSocket.send(JSON.stringify({
-            message: message,
-            username: "{{ request.user.username }}"
-        }));
+            chatSocket.send(JSON.stringify({
+                message: message,
+                username: "{{ request.user.username }}"
+            }));
 
-        messageInput.value = "";
-    });
-</script>
+            messageInput.value = "";
+        });
+    </script>
 
 {% endblock %}

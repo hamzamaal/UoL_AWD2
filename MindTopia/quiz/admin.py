@@ -11,3 +11,4 @@ class QuizAdmin(admin.ModelAdmin):
 
     list_display = ("question", "course")
     search_fields = ("question", "course__title")
+    list_filter = ("course",)

@@ -1,4 +1,4 @@
-"""View functions for the instructors application."""
+"""Views for the instructors application."""
 
 from django.shortcuts import render
 
@@ -9,8 +9,8 @@ def instruc(request):
     """Render the page displaying all instructors."""
     instructors = Instructor.objects.all()
 
-    return render(
-        request,
-        "instructo.html",
-        {"ins": instructors},
-    )
+    context = {
+        "ins": instructors,
+    }
+
+    return render(request, "instructo.html", context)

@@ -4,46 +4,42 @@
 
 {% block head %}
     <title>Update Your Info!</title>
-
-    <!-- Custom stylesheet for profile-related page styling -->
-    <link rel="stylesheet" type="text/css" href="{% static 'css/forum.css' %}">
+    <link rel="stylesheet" href="{% static 'css/forum.css' %}">
 {% endblock %}
 
 {% block content %}
-    <!-- Main container for the profile update page -->
+
+    <!-- Profile update container -->
     <div class="container py-5">
         <div class="row justify-content-center">
             <div class="col-md-8">
 
-                <!-- Profile update card -->
                 <div class="card shadow-sm border-0 p-4">
-
-                    <!-- Current profile image preview -->
                     <div class="text-center">
-                        <img class="rounded-circle img-fluid mb-3" src="{{ user.userprofile.image.url }}" alt="Profile Image">
+                        <img
+                            class="rounded-circle img-fluid mb-3"
+                            src="{{ user.userprofile.image.url }}"
+                            alt="Profile Image"
+                        >
                     </div>
 
-                    <!-- Page heading -->
                     <h3 class="text-center fw-bold mb-4">Profile Info</h3>
 
-                    <!-- Form for updating user and profile details -->
-                    <form method="POST" enctype="multipart/form-data">
+                    <form method="post" enctype="multipart/form-data">
                         {% csrf_token %}
-
-                        <!-- User account fields -->
                         {{ u_form|crispy }}
-
-                        <!-- Extended profile fields -->
                         {{ p_form|crispy }}
 
-                        <!-- Submit button -->
                         <div class="d-grid">
-                            <button class="btn btn-primary mt-3" type="submit">Update</button>
+                            <button class="btn btn-primary mt-3" type="submit">
+                                Update
+                            </button>
                         </div>
                     </form>
-
                 </div>
+
             </div>
         </div>
     </div>
+
 {% endblock content %}

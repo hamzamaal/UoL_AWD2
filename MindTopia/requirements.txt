@@ -5,7 +5,6 @@ channels_redis==4.2.1
 crispy-bootstrap5==2024.10
 Django==4.2.20
 django-crispy-forms==2.3
-django-rest-framework==0.1.0
 djangorestframework==3.15.2
 msgpack==1.1.0
 pillow==11.1.0
