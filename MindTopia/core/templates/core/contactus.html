@@ -1,0 +1,159 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block head %}
+<title>Contact Us | MindTopia</title>
+
+<link rel="stylesheet" href="{% static 'css/contactus.css' %}">
+{% endblock %}
+
+
+{% block content %}
+
+<!-- Hero banner -->
+<section class="page-hero" style="background-image: url('{% static "img/slide-1.jpg" %}');">
+    <div class="page-hero-content">
+        <h1>Contact MindTopia</h1>
+        <p class="mb-0">
+            Have questions, suggestions, or need help? Send us a message.
+        </p>
+    </div>
+</section>
+
+
+<div class="container py-5">
+
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+
+            <!-- Page introduction -->
+            <div class="text-center mb-4">
+                <h2 class="fw-bold">Get in Touch</h2>
+                <p class="text-muted">
+                    We would love to hear from you. Fill out the form below and
+                    our team will respond as soon as possible.
+                </p>
+            </div>
+
+
+            <!-- Contact form card -->
+            <div class="card shadow-sm border-0">
+
+                <div class="card-body p-4">
+
+                    <!-- Success message -->
+                    {% if messages %}
+                        {% for message in messages %}
+                        <div class="alert alert-success">
+                            {{ message }}
+                        </div>
+                        {% endfor %}
+                    {% endif %}
+
+                    <!-- Contact form -->
+                    <form method="POST" action="{% url 'contactus' %}" class="contactForm">
+
+                        {% csrf_token %}
+
+                        <!-- Name -->
+                        <div class="form-group mb-3">
+                            <label class="form-label fw-semibold">Your Name</label>
+
+                            <input
+                                type="text"
+                                name="name"
+                                class="form-control"
+                                placeholder="Enter your name"
+                                data-rule="minlen:4"
+                                data-msg="Please enter at least 4 characters"
+                                required
+                            >
+
+                            <div class="validation"></div>
+                        </div>
+
+
+                        <!-- Email -->
+                        <div class="form-group mb-3">
+
+                            <label class="form-label fw-semibold">Your Email</label>
+
+                            <input
+                                type="email"
+                                name="email"
+                                class="form-control"
+                                placeholder="Enter your email"
+                                data-rule="email"
+                                data-msg="Please enter a valid email address"
+                                required
+                            >
+
+                            <div class="validation"></div>
+
+                        </div>
+
+
+                        <!-- Subject -->
+                        <div class="form-group mb-3">
+
+                            <label class="form-label fw-semibold">Subject</label>
+
+                            <input
+                                type="text"
+                                name="subject"
+                                class="form-control"
+                                placeholder="Message subject"
+                                data-rule="minlen:4"
+                                data-msg="Please enter at least 4 characters"
+                                required
+                            >
+
+                            <div class="validation"></div>
+
+                        </div>
+
+
+                        <!-- Message -->
+                        <div class="form-group mb-3">
+
+                            <label class="form-label fw-semibold">Message</label>
+
+                            <textarea
+                                name="message"
+                                rows="5"
+                                class="form-control"
+                                placeholder="Write your message"
+                                data-rule="required"
+                                data-msg="Please write a message"
+                                required
+                            ></textarea>
+
+                            <div class="validation"></div>
+
+                        </div>
+
+
+                        <!-- Submit button -->
+                        <div class="text-center mt-4">
+
+                            <button
+                                type="submit"
+                                class="btn btn-primary btn-lg rounded-pill px-5"
+                            >
+                                Send Message
+                            </button>
+
+                        </div>
+
+                    </form>
+
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+
+</div>
+
+{% endblock %}

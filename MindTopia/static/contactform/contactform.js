@@ -1,118 +1,162 @@
-jQuery(document).ready(function($) {
-  "use strict";
+jQuery(document).ready(function ($) {
+    "use strict";
 
-  //Contact
-  $('form.contactForm').submit(function() {
-    var f = $(this).find('.form-group'),
-      ferror = false,
-      emailExp = /^[^\s()<>@,;:\/]+@\w[\w\.-]+\.[a-z]{2,}$/i;
+    /**
+     * Display or clear the validation message for a field.
+     *
+     * @param {jQuery} field - Input or textarea element.
+     * @param {boolean} hasError - Whether the field has failed validation.
+     * @param {string} message - Message to display when invalid.
+     */
+    function showValidation(field, hasError, message) {
+        const validationBox = field.next(".validation");
 
-    f.children('input').each(function() { // run all inputs
+        if (!validationBox.length) {
+            return;
+        }
 
-      var i = $(this); // current input
-      var rule = i.attr('data-rule');
-
-      if (rule !== undefined) {
-        var ierror = false; // error flag for current input
-        var pos = rule.indexOf(':', 0);
-        if (pos >= 0) {
-          var exp = rule.substr(pos + 1, rule.length);
-          rule = rule.substr(0, pos);
+        if (hasError) {
+            validationBox.html(message).show("blind");
         } else {
-          rule = rule.substr(pos + 1, rule.length);
+            validationBox.html("").hide("blind");
         }
-
-        switch (rule) {
-          case 'required':
-            if (i.val() === '') {
-              ferror = ierror = true;
-            }
-            break;
-
-          case 'minlen':
-            if (i.val().length < parseInt(exp)) {
-              ferror = ierror = true;
-            }
-            break;
-
-          case 'email':
-            if (!emailExp.test(i.val())) {
-              ferror = ierror = true;
-            }
-            break;
-
-          case 'checked':
-            if (! i.is(':checked')) {
-              ferror = ierror = true;
-            }
-            break;
-
-          case 'regexp':
-            exp = new RegExp(exp);
-            if (!exp.test(i.val())) {
-              ferror = ierror = true;
-            }
-            break;
-        }
-        i.next('.validation').html((ierror ? (i.attr('data-msg') !== undefined ? i.attr('data-msg') : 'wrong Input') : '')).show('blind');
-      }
-    });
-    f.children('textarea').each(function() { // run all inputs
-
-      var i = $(this); // current input
-      var rule = i.attr('data-rule');
-
-      if (rule !== undefined) {
-        var ierror = false; // error flag for current input
-        var pos = rule.indexOf(':', 0);
-        if (pos >= 0) {
-          var exp = rule.substr(pos + 1, rule.length);
-          rule = rule.substr(0, pos);
-        } else {
-          rule = rule.substr(pos + 1, rule.length);
-        }
-
-        switch (rule) {
-          case 'required':
-            if (i.val() === '') {
-              ferror = ierror = true;
-            }
-            break;
-
-          case 'minlen':
-            if (i.val().length < parseInt(exp)) {
-              ferror = ierror = true;
-            }
-            break;
-        }
-        i.next('.validation').html((ierror ? (i.attr('data-msg') != undefined ? i.attr('data-msg') : 'wrong Input') : '')).show('blind');
-      }
-    });
-    if (ferror) return false;
-    else var str = $(this).serialize();
-    var action = $(this).attr('action');
-    if( ! action ) {
-      action = 'contactform/contactform.php';
     }
-    $.ajax({
-      type: "POST",
-      url: action,
-      data: str,
-      success: function(msg) {
-        // alert(msg);
-        if (msg == 'OK') {
-          $("#sendmessage").addClass("show");
-          $("#errormessage").removeClass("show");
-          $('.contactForm').find("input, textarea").val("");
-        } else {
-          $("#sendmessage").removeClass("show");
-          $("#errormessage").addClass("show");
-          $('#errormessage').html(msg);
+
+    /**
+     * Validate a single field using its data-rule and data-msg attributes.
+     *
+     * Supported rules:
+     * - required
+     * - minlen:x
+     * - email
+     * - checked
+     * - regexp:pattern
+     *
+     * @param {jQuery} field - Input or textarea element.
+     * @returns {boolean} True if valid, otherwise false.
+     */
+    function validateField(field) {
+        const emailExp = /^[^\s()<>@,;:\/]+@\w[\w.-]+\.[a-z]{2,}$/i;
+        let rule = field.attr("data-rule");
+
+        if (typeof rule === "undefined" || rule === "") {
+            showValidation(field, false, "");
+            return true;
         }
 
-      }
-    });
-    return false;
-  });
+        let ruleName = rule;
+        let ruleValue = "";
+        const pos = rule.indexOf(":");
 
+        if (pos >= 0) {
+            ruleName = rule.substring(0, pos);
+            ruleValue = rule.substring(pos + 1);
+        }
+
+        let hasError = false;
+        const value = $.trim(field.val());
+        const message = field.attr("data-msg") || "Wrong input";
+
+        switch (ruleName) {
+            case "required":
+                hasError = value === "";
+                break;
+
+            case "minlen":
+                hasError = value.length < parseInt(ruleValue, 10);
+                break;
+
+            case "email":
+                hasError = !emailExp.test(value);
+                break;
+
+            case "checked":
+                hasError = !field.is(":checked");
+                break;
+
+            case "regexp":
+                hasError = !(new RegExp(ruleValue).test(value));
+                break;
+
+            default:
+                hasError = false;
+                break;
+        }
+
+        showValidation(field, hasError, message);
+        return !hasError;
+    }
+
+    /**
+     * Validate all relevant fields in the form.
+     *
+     * @param {jQuery} form - The submitted form.
+     * @returns {boolean} True if all fields are valid.
+     */
+    function validateForm(form) {
+        let isValid = true;
+
+        form.find(".form-group input, .form-group textarea, .form-group select").each(function () {
+            const field = $(this);
+            if (!validateField(field)) {
+                isValid = false;
+            }
+        });
+
+        return isValid;
+    }
+
+    /**
+     * Reset all form fields and validation messages.
+     *
+     * @param {jQuery} form - The form to reset.
+     */
+    function resetForm(form) {
+        form.find("input[type='text'], input[type='email'], input[type='tel'], textarea").val("");
+        form.find("input[type='checkbox'], input[type='radio']").prop("checked", false);
+        form.find("select").prop("selectedIndex", 0);
+        form.find(".validation").html("").hide();
+    }
+
+    $("form.contactForm").on("submit", function (event) {
+        event.preventDefault();
+
+        const form = $(this);
+        const action = form.attr("action") || "contactform/contactform.php";
+
+        $("#sendmessage").removeClass("show");
+        $("#errormessage").removeClass("show").html("");
+
+        if (!validateForm(form)) {
+            return false;
+        }
+
+        $.ajax({
+            type: "POST",
+            url: action,
+            data: form.serialize(),
+            dataType: "text",
+            success: function (response) {
+                const msg = $.trim(response);
+
+                if (msg === "OK") {
+                    $("#sendmessage").addClass("show");
+                    $("#errormessage").removeClass("show").html("");
+                    resetForm(form);
+                } else {
+                    $("#sendmessage").removeClass("show");
+                    $("#errormessage").addClass("show").html(msg);
+                }
+            },
+            error: function (xhr, status, error) {
+                $("#sendmessage").removeClass("show");
+                $("#errormessage")
+                    .addClass("show")
+                    .html("An unexpected error occurred. Please try again later.");
+                console.error("Contact form AJAX error:", status, error);
+            }
+        });
+
+        return false;
+    });
 });
