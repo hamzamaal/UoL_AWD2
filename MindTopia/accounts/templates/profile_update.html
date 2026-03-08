@@ -8,23 +8,23 @@
 {% endblock %}
 
 {% block content %}
-
-    <!-- Profile update container -->
     <div class="container py-5">
         <div class="row justify-content-center">
             <div class="col-md-8">
 
+                <!-- Profile update card -->
                 <div class="card shadow-sm border-0 p-4">
                     <div class="text-center">
                         <img
                             class="rounded-circle img-fluid mb-3"
                             src="{{ user.userprofile.image.url }}"
-                            alt="Profile Image"
+                            alt="Profile image"
                         >
                     </div>
 
                     <h3 class="text-center fw-bold mb-4">Profile Info</h3>
 
+                    <!-- Profile update form -->
                     <form method="post" enctype="multipart/form-data">
                         {% csrf_token %}
                         {{ u_form|crispy }}
@@ -41,5 +41,4 @@
             </div>
         </div>
     </div>
-
 {% endblock content %}
