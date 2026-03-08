@@ -1,63 +1,102 @@
-{% extends 'base.html' %}
+{% extends "base.html" %}
 {% load static %}
 
 {% block head %}
-<title>Discussion Forum</title>
+    <title>Discussion Forum</title>
 {% endblock %}
 
 {% block content %}
-<section class="page-hero" style="background-image: url('{% static 'img/slide-2.jpg' %}');">
-    <div class="page-hero-content">
-        <h1>Discussion Forum</h1>
-        <p class="mb-0">Ask questions, share ideas, and learn from the community.</p>
-    </div>
-</section>
 
-<div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
-    <div>
-        <h2 class="section-title mb-1">Latest Discussions</h2>
-        <p class="section-subtitle mb-0">Browse recent posts or create a new conversation.</p>
-    </div>
-    <a class="btn btn-primary rounded-pill px-4" href="{% url 'post-create' %}">
-        <i class="fas fa-plus me-2"></i>New Post
-    </a>
-</div>
+    <!-- Forum hero section -->
+    <section
+        class="page-hero"
+        style="background-image: url('{% static 'img/slide-2.jpg' %}');"
+    >
+        <div class="page-hero-content">
+            <h1>Discussion Forum</h1>
+            <p class="mb-0">
+                Ask questions, share ideas, and learn from the community.
+            </p>
+        </div>
+    </section>
 
-<div class="row g-4">
-    {% for post in posts %}
-    <div class="col-lg-6">
-        <article class="forum-post-card h-100 p-4 hover-card">
-            <div class="d-flex align-items-center gap-3 mb-3">
-                <img class="rounded-circle object-cover" src="{{ post.author.userprofile.image.url }}" alt="{{ post.author.username }}" width="64" height="64">
-                <div>
-                    <h5 class="mb-1 fw-bold">{{ post.title }}</h5>
-                    <div class="forum-meta">
-                        <span><i class="fas fa-user me-1"></i>{{ post.author.username }}</span>
-                        <span><i class="fas fa-calendar-alt me-1"></i>{{ post.date_posted|date:"M d, Y" }}</span>
-                        <span><i class="fas fa-comments me-1"></i>{{ post.comments.count }} comments</span>
+    <!-- Forum header and primary action -->
+    <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
+        <div>
+            <h2 class="section-title mb-1">Latest Discussions</h2>
+            <p class="section-subtitle mb-0">
+                Browse recent posts or create a new conversation.
+            </p>
+        </div>
+
+        <a class="btn btn-primary rounded-pill px-4" href="{% url 'post-create' %}">
+            <i class="fas fa-plus me-2"></i>New Post
+        </a>
+    </div>
+
+    <!-- Forum post listing -->
+    <div class="row g-4">
+        {% for post in posts %}
+            <div class="col-lg-6">
+                <article class="forum-post-card h-100 p-4 hover-card">
+
+                    <div class="d-flex align-items-center gap-3 mb-3">
+                        <img
+                            class="rounded-circle object-cover"
+                            src="{{ post.author.userprofile.image.url }}"
+                            alt="{{ post.author.username }}"
+                            width="64"
+                            height="64"
+                        >
+
+                        <div>
+                            <h5 class="mb-1 fw-bold">{{ post.title }}</h5>
+
+                            <div class="forum-meta">
+                                <span>
+                                    <i class="fas fa-user me-1"></i>{{ post.author.username }}
+                                </span>
+                                <span>
+                                    <i class="fas fa-calendar-alt me-1"></i>{{ post.date_posted|date:"M d, Y" }}
+                                </span>
+                                <span>
+                                    <i class="fas fa-comments me-1"></i>{{ post.comments.count }} comments
+                                </span>
+                            </div>
+                        </div>
                     </div>
+
+                    <p class="text-muted mb-4">{{ post.content|truncatewords:24 }}</p>
+
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span class="badge-soft">Discussion</span>
+                        <a
+                            class="btn btn-outline-primary rounded-pill px-4"
+                            href="{% url 'post-detail' post.id %}"
+                        >
+                            View Post
+                        </a>
+                    </div>
+
+                </article>
+            </div>
+        {% empty %}
+            <div class="col-12">
+                <div class="empty-state">
+                    <i class="fas fa-comments"></i>
+                    <h5 class="fw-bold">No discussions yet</h5>
+                    <p class="text-muted mb-3">
+                        Start the conversation by creating the first forum post.
+                    </p>
+                    <a
+                        class="btn btn-primary rounded-pill px-4"
+                        href="{% url 'post-create' %}"
+                    >
+                        Create First Post
+                    </a>
                 </div>
             </div>
-
-            <p class="text-muted mb-4">{{ post.content|truncatewords:24 }}</p>
-
-            <div class="d-flex justify-content-between align-items-center">
-                <span class="badge-soft">Discussion</span>
-                <a class="btn btn-outline-primary rounded-pill px-4" href="{% url 'post-detail' post.id %}">
-                    View Post
-                </a>
-            </div>
-        </article>
+        {% endfor %}
     </div>
-    {% empty %}
-    <div class="col-12">
-        <div class="empty-state">
-            <i class="fas fa-comments"></i>
-            <h5 class="fw-bold">No discussions yet</h5>
-            <p class="text-muted mb-3">Start the conversation by creating the first forum post.</p>
-            <a class="btn btn-primary rounded-pill px-4" href="{% url 'post-create' %}">Create First Post</a>
-        </div>
-    </div>
-    {% endfor %}
-</div>
+
 {% endblock %}

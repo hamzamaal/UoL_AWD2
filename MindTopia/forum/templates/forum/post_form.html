@@ -1,29 +1,30 @@
-{% extends 'base.html' %}
+{% extends "base.html" %}
 {% load crispy_forms_tags %}
 {% load static %}
 
-
 {% block head %}
-<title>Post Your Question!</title>
-<link rel="stylesheet" type="text/css" href="{% static 'css/forum.css' %}">
+    <title>Post Your Question!</title>
+    <link rel="stylesheet" href="{% static 'css/forum.css' %}">
 {% endblock %}
 
-
 {% block content %}
-<br>
-<br>
-<div class="container post-container">
-    <div class="content-section">
-        <form method="POST">
-            {% csrf_token %}
-            <fieldset class="form-group">
-                <legend class="border-bottom mb-4">Start A Topic!</legend>
-                {{ form|crispy }}
-            </fieldset>
-            <div class="form-group" class="forum-btn">
-                <button class="btn btn-outline-info" type="submit" >Post</button>
-            </div>
-        </form>
+
+    <!-- Topic creation form -->
+    <div class="container post-container py-5">
+        <div class="content-section">
+            <form method="post">
+                {% csrf_token %}
+
+                <fieldset class="form-group">
+                    <legend class="border-bottom mb-4">Start A Topic!</legend>
+                    {{ form|crispy }}
+                </fieldset>
+
+                <div class="form-group forum-btn">
+                    <button class="btn btn-outline-info" type="submit">Post</button>
+                </div>
+            </form>
+        </div>
     </div>
-</div>
+
 {% endblock content %}

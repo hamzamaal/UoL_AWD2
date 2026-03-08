@@ -1,65 +1,105 @@
-{% extends 'base.html' %}
+{% extends "base.html" %}
 {% load static %}
 
 {% block head %}
-<title>Discussion Forum - {{ object.title }}</title>
+    <title>Discussion Forum - {{ object.title }}</title>
 {% endblock %}
 
 {% block content %}
-<div class="row justify-content-center">
-    <div class="col-lg-9">
-        <article class="forum-post-card p-4 mb-4">
-            <div class="d-flex flex-wrap justify-content-between align-items-start gap-3 mb-3">
-                <div class="d-flex align-items-center gap-3">
-                    <img class="rounded-circle object-cover" src="{{ object.author.userprofile.image.url }}" alt="{{ object.author.username }}" width="72" height="72">
-                    <div>
-                        <h2 class="fw-bold mb-1">{{ object.title }}</h2>
-                        <div class="forum-meta">
-                            <span><i class="fas fa-user me-1"></i>{{ object.author.username }}</span>
-                            <span><i class="fas fa-clock me-1"></i>{{ object.date_posted|date:"M d, Y H:i" }}</span>
+
+    <!-- Forum post detail -->
+    <div class="row justify-content-center">
+        <div class="col-lg-9">
+
+            <article class="forum-post-card p-4 mb-4">
+
+                <div class="d-flex flex-wrap justify-content-between align-items-start gap-3 mb-3">
+                    <div class="d-flex align-items-center gap-3">
+                        <img
+                            class="rounded-circle object-cover"
+                            src="{{ object.author.userprofile.image.url }}"
+                            alt="{{ object.author.username }}"
+                            width="72"
+                            height="72"
+                        >
+
+                        <div>
+                            <h2 class="fw-bold mb-1">{{ object.title }}</h2>
+
+                            <div class="forum-meta">
+                                <span>
+                                    <i class="fas fa-user me-1"></i>{{ object.author.username }}
+                                </span>
+                                <span>
+                                    <i class="fas fa-clock me-1"></i>{{ object.date_posted|date:"M d, Y H:i" }}
+                                </span>
+                            </div>
                         </div>
                     </div>
+
+                    {% if object.author == user %}
+                        <div class="d-flex gap-2">
+                            <a
+                                class="btn btn-outline-secondary rounded-pill px-3"
+                                href="{% url 'post-update' object.id %}"
+                            >
+                                Update
+                            </a>
+                            <a
+                                class="btn btn-outline-danger rounded-pill px-3"
+                                href="{% url 'post-delete' object.id %}"
+                            >
+                                Delete
+                            </a>
+                        </div>
+                    {% endif %}
                 </div>
 
-                {% if object.author == user %}
-                <div class="d-flex gap-2">
-                    <a class="btn btn-outline-secondary rounded-pill px-3" href="{% url 'post-update' object.id %}">Update</a>
-                    <a class="btn btn-outline-danger rounded-pill px-3" href="{% url 'post-delete' object.id %}">Delete</a>
+                <p class="mb-4 lh-lg">{{ object.content }}</p>
+
+                <div class="d-flex justify-content-between align-items-center">
+                    <span class="result-chip">
+                        <i class="fas fa-comments"></i>
+                        {{ object.comments.count }} comment{{ object.comments.count|pluralize }}
+                    </span>
+
+                    <a
+                        href="{% url 'add_comment_to_post' pk=object.pk %}"
+                        class="btn btn-primary rounded-pill px-4"
+                    >
+                        <i class="fas fa-reply me-2"></i>Add Comment
+                    </a>
                 </div>
-                {% endif %}
+
+            </article>
+
+            <!-- Comment list -->
+            <div class="app-card">
+                <h4 class="fw-bold mb-3">Comments</h4>
+
+                {% for comment in object.comments.all %}
+                    <div class="comment-card">
+                        <div class="d-flex justify-content-between align-items-start gap-3 mb-2">
+                            <div class="fw-semibold">{{ comment.author.username }}</div>
+                            <small class="text-muted">
+                                {{ comment.date_posted|date:"M d, Y H:i" }}
+                            </small>
+                        </div>
+
+                        <p class="mb-0">{{ comment.content|linebreaks }}</p>
+                    </div>
+                {% empty %}
+                    <div class="empty-state">
+                        <i class="fas fa-comment-dots"></i>
+                        <h5 class="fw-bold">No comments yet</h5>
+                        <p class="text-muted mb-0">
+                            Be the first to reply to this discussion.
+                        </p>
+                    </div>
+                {% endfor %}
             </div>
 
-            <p class="mb-4 lh-lg">{{ object.content }}</p>
-
-            <div class="d-flex justify-content-between align-items-center">
-                <span class="result-chip">
-                    <i class="fas fa-comments"></i>{{ object.comments.count }} comment{{ object.comments.count|pluralize }}
-                </span>
-                <a href="{% url 'add_comment_to_post' pk=object.pk %}" class="btn btn-primary rounded-pill px-4">
-                    <i class="fas fa-reply me-2"></i>Add Comment
-                </a>
-            </div>
-        </article>
-
-        <div class="app-card">
-            <h4 class="fw-bold mb-3">Comments</h4>
-
-            {% for comment in object.comments.all %}
-            <div class="comment-card">
-                <div class="d-flex justify-content-between align-items-start gap-3 mb-2">
-                    <div class="fw-semibold">{{ comment.author.username }}</div>
-                    <small class="text-muted">{{ comment.date_posted|date:"M d, Y H:i" }}</small>
-                </div>
-                <p class="mb-0">{{ comment.content|linebreaks }}</p>
-            </div>
-            {% empty %}
-            <div class="empty-state">
-                <i class="fas fa-comment-dots"></i>
-                <h5 class="fw-bold">No comments yet</h5>
-                <p class="text-muted mb-0">Be the first to reply to this discussion.</p>
-            </div>
-            {% endfor %}
         </div>
     </div>
-</div>
+
 {% endblock %}
