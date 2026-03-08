@@ -1,5 +1,13 @@
+"""Application configuration for the courses app."""
+
 from django.apps import AppConfig
 
+
 class CoursesConfig(AppConfig):
-    default_auto_field = 'django.db.models.BigAutoField'  # Django 4.2+ Compatibility
-    name = 'courses'
+    """Configure the courses application."""
+
+    # Default primary key field type for models
+    default_auto_field = "django.db.models.BigAutoField"
+
+    # Name of the Django application
+    name = "courses"

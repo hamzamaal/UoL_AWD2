@@ -3,21 +3,33 @@
 {% load crispy_forms_tags %}
 
 {% block head %}
-<title>{{ course.title }} | MindTopia</title>
+    <title>{{ course.title }} | MindTopia</title>
 {% endblock %}
 
 {% block content %}
+
+<!-- Course hero banner -->
 <section class="page-hero" style="background-image: url('{% static 'img/course-banner.jpg' %}');">
     <div class="page-hero-content">
         <h1>{{ course.title }}</h1>
-        <p class="mb-0">Explore the course resources, watch the lesson video, and review student feedback.</p>
+        <p class="mb-0">
+            Explore the course resources, watch the lesson video,
+            and review student feedback.
+        </p>
     </div>
 </section>
 
+<!-- Course overview -->
 <div class="row g-4 align-items-start mb-5">
+
     <div class="col-lg-4">
         <div class="section-card overflow-hidden h-100">
-            <img src="{{ course.logo.url }}" class="w-100 object-cover" style="height: 260px;" alt="{{ course.title }}">
+            <img
+                src="{{ course.logo.url }}"
+                class="w-100 object-cover"
+                style="height: 260px;"
+                alt="{{ course.title }}"
+            >
         </div>
     </div>
 
@@ -27,139 +39,231 @@
             <p class="section-subtitle">{{ course.description }}</p>
 
             {% if course.instructor %}
-            <p class="mb-3"><strong>Instructor:</strong> <span class="text-primary">{{ course.instructor.name }}</span></p>
+                <p class="mb-3">
+                    <strong>Instructor:</strong>
+                    <span class="text-primary">{{ course.instructor.name }}</span>
+                </p>
             {% endif %}
 
             {% if course.url and course.url != "#" %}
-            <p class="mb-3">
-                <strong>External Resource:</strong>
-                <a href="{{ course.url }}" class="text-decoration-none" target="_blank">Open link</a>
-            </p>
+                <p class="mb-3">
+                    <strong>External Resource:</strong>
+                    <a
+                        href="{{ course.url }}"
+                        class="text-decoration-none"
+                        target="_blank"
+                    >
+                        Open link
+                    </a>
+                </p>
             {% endif %}
 
+            <!-- Course registration state -->
             {% if request.user.is_authenticated and request.user.userprofile.role == 'student' %}
                 <div class="mt-4">
                     {% if is_registered %}
-                        <span class="badge text-bg-success rounded-pill px-3 py-2">Already Registered</span>
+                        <span class="badge text-bg-success rounded-pill px-3 py-2">
+                            Already Registered
+                        </span>
                     {% else %}
-                        <a href="{% url 'register_course' course.id %}" class="btn btn-success rounded-pill px-4">
+                        <a
+                            href="{% url 'register_course' course.id %}"
+                            class="btn btn-success rounded-pill px-4"
+                        >
                             Register for this Course
                         </a>
                     {% endif %}
                 </div>
+
             {% elif request.user.is_authenticated and request.user.userprofile.role == 'teacher' %}
                 <div class="mt-4">
-                    <span class="badge text-bg-secondary rounded-pill px-3 py-2">Teachers cannot register for courses</span>
+                    <span class="badge text-bg-secondary rounded-pill px-3 py-2">
+                        Teachers cannot register for courses
+                    </span>
                 </div>
             {% endif %}
+
         </div>
     </div>
+
 </div>
 
+<!-- Course learning resources -->
 <div class="accordion mb-5" id="courseAccordion">
+
     <div class="accordion-item section-card mb-3 border-0">
         <h2 class="accordion-header">
-            <button class="accordion-button fw-semibold" type="button" data-bs-toggle="collapse" data-bs-target="#videoCollapse">
+            <button
+                class="accordion-button fw-semibold"
+                type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#videoCollapse"
+            >
                 Video Lecture
             </button>
         </h2>
+
         <div id="videoCollapse" class="accordion-collapse collapse show" data-bs-parent="#courseAccordion">
             <div class="accordion-body">
+
                 {% if course.video %}
-                <div class="ratio ratio-16x9">
-                    <video class="rounded" controls>
-                        <source src="{{ course.video.url }}" type="video/mp4">
-                        Your browser does not support the video tag.
-                    </video>
-                </div>
+                    <div class="ratio ratio-16x9">
+                        <video class="rounded" controls>
+                            <source src="{{ course.video.url }}" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>
                 {% else %}
-                <div class="empty-state">
-                    <i class="fas fa-video"></i>
-                    <h5 class="fw-bold">No video uploaded</h5>
-                    <p class="text-muted mb-0">A lecture video has not yet been added for this course.</p>
-                </div>
+                    <div class="empty-state">
+                        <i class="fas fa-video"></i>
+                        <h5 class="fw-bold">No video uploaded</h5>
+                        <p class="text-muted mb-0">
+                            A lecture video has not yet been added for this course.
+                        </p>
+                    </div>
                 {% endif %}
+
             </div>
         </div>
     </div>
 
     <div class="accordion-item section-card border-0">
         <h2 class="accordion-header">
-            <button class="accordion-button collapsed fw-semibold" type="button" data-bs-toggle="collapse" data-bs-target="#pdfCollapse">
+            <button
+                class="accordion-button collapsed fw-semibold"
+                type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#pdfCollapse"
+            >
                 Course Book / PDF
             </button>
         </h2>
+
         <div id="pdfCollapse" class="accordion-collapse collapse" data-bs-parent="#courseAccordion">
             <div class="accordion-body">
+
                 {% if course.pdf %}
-                <embed src="{{ course.pdf.url }}" width="100%" height="650px" class="rounded">
+                    <embed
+                        src="{{ course.pdf.url }}"
+                        width="100%"
+                        height="650px"
+                        class="rounded"
+                    >
                 {% else %}
-                <div class="empty-state">
-                    <i class="fas fa-file-pdf"></i>
-                    <h5 class="fw-bold">No PDF uploaded</h5>
-                    <p class="text-muted mb-0">A course document has not yet been added.</p>
-                </div>
+                    <div class="empty-state">
+                        <i class="fas fa-file-pdf"></i>
+                        <h5 class="fw-bold">No PDF uploaded</h5>
+                        <p class="text-muted mb-0">
+                            A course document has not yet been added.
+                        </p>
+                    </div>
                 {% endif %}
+
             </div>
         </div>
     </div>
+
 </div>
 
+<!-- Student feedback -->
 <div class="app-card mb-4">
     <h3 class="fw-bold mb-3">Student Feedback</h3>
 
     {% if feedbacks %}
         <div class="d-grid gap-3">
             {% for feedback in feedbacks %}
-            <div class="comment-card">
-                <div class="d-flex justify-content-between align-items-start gap-3 mb-2">
-                    <div class="fw-semibold">{{ feedback.user.username }}</div>
-                    <small class="text-muted">{{ feedback.created_at|date:"M d, Y H:i" }}</small>
+                <div class="comment-card">
+
+                    <div class="d-flex justify-content-between align-items-start gap-3 mb-2">
+                        <div class="fw-semibold">{{ feedback.user.username }}</div>
+                        <small class="text-muted">
+                            {{ feedback.created_at|date:"M d, Y H:i" }}
+                        </small>
+                    </div>
+
+                    <div class="mb-2">
+                        <span class="badge text-bg-primary rounded-pill">
+                            Rating: {{ feedback.rating }}/5
+                        </span>
+                    </div>
+
+                    <p class="mb-0">{{ feedback.comment }}</p>
+
                 </div>
-                <div class="mb-2">
-                    <span class="badge text-bg-primary rounded-pill">Rating: {{ feedback.rating }}/5</span>
-                </div>
-                <p class="mb-0">{{ feedback.comment }}</p>
-            </div>
             {% endfor %}
         </div>
+
     {% else %}
         <div class="empty-state">
             <i class="fas fa-star"></i>
             <h5 class="fw-bold">No feedback yet</h5>
-            <p class="text-muted mb-0">Be the first learner to leave a review for this course.</p>
+            <p class="text-muted mb-0">
+                Be the first learner to leave a review for this course.
+            </p>
         </div>
     {% endif %}
 </div>
 
+<!-- Feedback submission form -->
 <div class="app-card">
+
     {% if user.is_authenticated %}
-    <h4 class="fw-bold mb-3">Leave a Review</h4>
-    <form method="post" action="{% url 'submit_feedback' course.id %}">
-        {% csrf_token %}
 
-        <div class="mb-3">
-            <label class="form-label fw-semibold" for="{{ form.comment.id_for_label }}">Comment</label>
-            {{ form.comment }}
-            {{ form.comment.errors }}
-            <div id="feedbackCounter" class="char-counter"></div>
-        </div>
+        <h4 class="fw-bold mb-3">Leave a Review</h4>
 
-        <div class="mb-3">
-            <label class="form-label fw-semibold" for="{{ form.rating.id_for_label }}">Rating</label>
-            {{ form.rating }}
-            {{ form.rating.errors }}
-        </div>
+        <form method="post" action="{% url 'submit_feedback' course.id %}">
+            {% csrf_token %}
 
-        <button type="submit" class="btn btn-primary rounded-pill px-4">Submit Feedback</button>
-    </form>
+            <div class="mb-3">
+                <label
+                    class="form-label fw-semibold"
+                    for="{{ form.comment.id_for_label }}"
+                >
+                    Comment
+                </label>
+                {{ form.comment }}
+                {{ form.comment.errors }}
+                <div id="feedbackCounter" class="char-counter"></div>
+            </div>
+
+            <div class="mb-3">
+                <label
+                    class="form-label fw-semibold"
+                    for="{{ form.rating.id_for_label }}"
+                >
+                    Rating
+                </label>
+                {{ form.rating }}
+                {{ form.rating.errors }}
+            </div>
+
+            <button
+                type="submit"
+                class="btn btn-primary rounded-pill px-4"
+            >
+                Submit Feedback
+            </button>
+
+        </form>
+
     {% else %}
-    <div class="empty-state">
-        <i class="fas fa-lock"></i>
-        <h5 class="fw-bold">Login required</h5>
-        <p class="text-muted mb-3">Please log in to leave feedback on this course.</p>
-        <a href="{% url 'login' %}" class="btn btn-secondary rounded-pill px-4">Login</a>
-    </div>
+
+        <div class="empty-state">
+            <i class="fas fa-lock"></i>
+            <h5 class="fw-bold">Login required</h5>
+            <p class="text-muted mb-3">
+                Please log in to leave feedback on this course.
+            </p>
+            <a
+                href="{% url 'login' %}"
+                class="btn btn-secondary rounded-pill px-4"
+            >
+                Login
+            </a>
+        </div>
+
     {% endif %}
+
 </div>
+
 {% endblock %}
