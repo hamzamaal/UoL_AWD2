@@ -1,34 +1,47 @@
-from django.db import models
-from django.utils import timezone
+"""Database models for the forum app."""
+
 from django.contrib.auth.models import User
+from django.db import models
 from django.urls import reverse
+from django.utils import timezone
 
-# Create your models here.
+
 class Post(models.Model):
-	title=models.CharField(max_length=100)
-	content=models.TextField()
-	date_posted=models.DateTimeField(default=timezone.now)
-	author=models.ForeignKey(User, on_delete=models.CASCADE)
+    """Store a forum discussion post."""
 
-	def __str__(self):
-		return self.title
+    title = models.CharField(max_length=100)
+    content = models.TextField()
+    date_posted = models.DateTimeField(default=timezone.now)
+    author = models.ForeignKey(User, on_delete=models.CASCADE)
 
-	def get_absolute_url(self):
-		return reverse('post-detail', kwargs={'pk':self.pk})
+    def __str__(self):
+        """Return the post title for human-readable displays."""
+        return self.title
+
+    def get_absolute_url(self):
+        """Return the URL for this post's detail page."""
+        return reverse('post-detail', kwargs={'pk': self.pk})
+
 
 class Comment(models.Model):
-	post = models.ForeignKey('forum.Post', on_delete=models.CASCADE, related_name='comments')
-	author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='comments')
-	content = models.TextField()
-	date_posted = models.DateTimeField(default=timezone.now)
-	approved_comment = models.BooleanField(default=False)
+    """Store a comment attached to a forum post."""
 
-	class Meta:
-		ordering = ['-date_posted',]
+    post = models.ForeignKey('forum.Post', on_delete=models.CASCADE, related_name='comments')
+    author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='comments')
+    content = models.TextField()
+    date_posted = models.DateTimeField(default=timezone.now)
+    approved_comment = models.BooleanField(default=False)
 
-	def approve(self):
-		self.approved_comment = True
-		self.save()
+    class Meta:
+        """Return the newest comments first."""
 
-	def __str__(self):
-		return self.content
+        ordering = ['-date_posted']
+
+    def approve(self):
+        """Mark the current comment as approved."""
+        self.approved_comment = True
+        self.save()
+
+    def __str__(self):
+        """Return the comment content for human-readable displays."""
+        return self.content

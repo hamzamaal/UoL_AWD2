@@ -1,7 +1,11 @@
+"""Basic smoke tests for the core app."""
+
 from django.test import TestCase
 
-# Create your tests here.
 
 class ExampleTestCase(TestCase):
+    """Confirm that the test suite is configured correctly."""
+
     def test_example(self):
-        self.assertEqual(1 + 1, 2)  # Example test to ensure testing setup
+        """Verify that the testing framework can execute a simple assertion."""
+        self.assertEqual(1 + 1, 2)

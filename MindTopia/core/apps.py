@@ -1,5 +1,10 @@
+"""Application configuration for the core app."""
+
 from django.apps import AppConfig
 
+
 class CoreConfig(AppConfig):
-    default_auto_field = 'django.db.models.BigAutoField'  # Django 4.2+ compatibility
+    """Configure the core application."""
+
+    default_auto_field = 'django.db.models.BigAutoField'
     name = 'core'

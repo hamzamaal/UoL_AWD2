@@ -1,117 +1,90 @@
-# Import Django's form utilities used to create and manage form classes
+"""Form definitions for the accounts app."""
+
 from django import forms
-
-# Import the built-in User model used for authentication and user management
-from django.contrib.auth.models import User
-
-# Import Django's default user creation form which includes password validation
 from django.contrib.auth.forms import UserCreationForm
-
-# Import the custom UserProfile model from the current application
-from .models import UserProfile
-
-# Import transaction management to ensure database operations occur atomically
+from django.contrib.auth.models import User
 from django.db import transaction
 
+from .models import UserProfile
 
-# Form used to register new users with additional profile information
+
 class UserRegisterForm(UserCreationForm):
+    """Create a new user account together with its profile data."""
 
-    """ Custom user registration form with additional fields """
-
-    # Require users to provide an email address during registration
     email = forms.EmailField(required=True)
-
-    # Field to capture the user's first name
     first_name = forms.CharField(max_length=50, required=True)
-
-    # Field to capture the user's last name
     last_name = forms.CharField(max_length=50, required=True)
-
-    # Field allowing the user to select their role (student or teacher)
     role = forms.ChoiceField(choices=UserProfile.ROLE_CHOICES, required=True)
 
-    # Meta class defines the model and fields used in the form
     class Meta:
-        model = User
-        fields = ['username', 'email', 'first_name', 'last_name', 'password1', 'password2', 'role']
+        """Define the model and fields used during registration."""
 
-    # Ensure the entire save process is executed as a single database transaction
+        model = User
+        fields = [
+            'username',
+            'email',
+            'first_name',
+            'last_name',
+            'password1',
+            'password2',
+            'role',
+        ]
+
     @transaction.atomic
     def save(self, commit=True):
-
-        # Create a User object but delay saving to the database
+        """Create the user and synchronise the linked profile record."""
         user = super().save(commit=False)
+        user.first_name = self.cleaned_data.get('first_name', '')
+        user.last_name = self.cleaned_data.get('last_name', '')
+        user.email = self.cleaned_data.get('email', '')
 
-        # Assign first and last name values from the cleaned form data
-        user.first_name = self.cleaned_data.get("first_name", "")
-        user.last_name = self.cleaned_data.get("last_name", "")
-        user.email = self.cleaned_data.get("email", "")
-
-        # Save the user object if commit is True
         if commit:
             user.save()
-
-            # Retrieve or create the associated UserProfile to avoid duplicates if signals already created one
             profile, _ = UserProfile.objects.get_or_create(user=user)
-
-            # Assign the selected role to the profile
-            profile.role = self.cleaned_data["role"]
-
-            # Save the updated profile to the database
+            profile.role = self.cleaned_data['role']
             profile.save()
 
-        # Return the created user instance
         return user
 
 
-# Form used to update basic user account details
 class UserUpdateForm(forms.ModelForm):
+    """Update core details stored on Django's built-in User model."""
 
-    """ Form to update user details (username, email, first & last name) """
-
-    # Email field required for updating user information
     email = forms.EmailField(required=True)
-
-    # First name field required for user profile updates
     first_name = forms.CharField(max_length=50, required=True)
-
-    # Last name field required for user profile updates
     last_name = forms.CharField(max_length=50, required=True)
 
-    # Meta class specifying the model and fields included in the form
     class Meta:
+        """Define the editable account fields."""
+
         model = User
         fields = ['username', 'email', 'first_name', 'last_name']
 
 
-# Form used to update extended user profile information
 class ProfileUpdateForm(forms.ModelForm):
+    """Update extended profile information stored on UserProfile."""
 
-    """ Form to update UserProfile details including bio, location, and profile image """
-
-    # Meta class linking the form to the UserProfile model
     class Meta:
-        model = UserProfile
+        """Define the editable profile fields."""
 
-        # Fields available for editing within the profile update form
+        model = UserProfile
         fields = ['bio', 'location', 'date_of_birth', 'image']
 
 
-# Form allowing students to post short status updates to their profile
 class StatusUpdateForm(forms.ModelForm):
+    """Allow users to publish a short profile status update."""
 
-    """ Form to allow students to post a status update on their profile """
-
-    # Meta class linking the form to the UserProfile model
     class Meta:
+        """Define the status field and its textarea widget."""
+
         model = UserProfile
-
-        # Field used to capture the status update text
         fields = ['status_update']
-
-        # Custom widget used to display the status field as a styled textarea
         widgets = {
-            'status_update': forms.Textarea(attrs={'class': 'form-control', 'rows': 2, 'placeholder': 'What’s on your mind?'}),
+            'status_update': forms.Textarea(
+                attrs={
+                    'class': 'form-control',
+                    'rows': 2,
+                    'placeholder': "What's on your mind?",
+                }
+            ),
         }
-        

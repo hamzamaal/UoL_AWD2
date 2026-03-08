@@ -30,6 +30,13 @@ class QuizApiTests(TestCase):
             url='#'
         )
 
+        self.empty_course = Course.objects.create(
+            title='Empty Course',
+            description='No quiz questions yet',
+            instructor=self.instructor,
+            url='#'
+        )
+
         self.quiz = Quiz.objects.create(
             course=self.course,
             question='What is Python?',
@@ -50,8 +57,17 @@ class QuizApiTests(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.data['question'], 'What is Python?')
 
+    def test_quiz_detail_returns_404_for_invalid_quiz(self):
+        response = self.api_client.get(reverse('api_quiz_detail', kwargs={'pk': 9999}))
+        self.assertEqual(response.status_code, 404)
+
     def test_quiz_by_course_api_is_public(self):
         response = self.api_client.get(reverse('api_course_quiz_list', kwargs={'course_id': self.course.id}))
         self.assertEqual(response.status_code, 200)
         self.assertEqual(len(response.data), 1)
         self.assertEqual(response.data[0]['course'], self.course.id)
+
+    def test_quiz_by_course_returns_empty_list_when_no_questions_exist(self):
+        response = self.api_client.get(reverse('api_course_quiz_list', kwargs={'course_id': self.empty_course.id}))
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.data), 0)

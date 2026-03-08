@@ -1,8 +1,15 @@
+"""Form definitions for the forum app."""
+
 from django import forms
+
 from .models import Comment
-from django.forms import ModelForm
+
 
 class CommentForm(forms.ModelForm):
-	class Meta:
-		model=Comment
-		exclude= ('author', 'post', 'date_posted', 'approved_comment',)
+    """Allow users to submit a comment body for a forum post."""
+
+    class Meta:
+        """Exclude fields set automatically by the view logic."""
+
+        model = Comment
+        exclude = ('author', 'post', 'date_posted', 'approved_comment')

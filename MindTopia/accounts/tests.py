@@ -58,6 +58,28 @@ class AccountViewAndApiTests(TestCase):
         self.assertTrue(User.objects.filter(username='newstudent').exists())
         self.assertTrue(UserProfile.objects.filter(user__username='newstudent', role='student').exists())
 
+    def test_register_fails_with_mismatched_passwords(self):
+        response = self.web_client.post(reverse('register'), {
+            'username': 'badstudent',
+            'email': 'badstudent@example.com',
+            'first_name': 'Bad',
+            'last_name': 'Student',
+            'password1': 'StrongPass123',
+            'password2': 'WrongPass123',
+            'role': 'student',
+        })
+        self.assertEqual(response.status_code, 200)
+        self.assertFalse(User.objects.filter(username='badstudent').exists())
+
+    def test_profile_requires_login(self):
+        response = self.web_client.get(reverse('profile'))
+        self.assertEqual(response.status_code, 302)
+
+    def test_profile_page_loads_for_authenticated_user(self):
+        self.web_client.login(username='student1', password='TestPass123')
+        response = self.web_client.get(reverse('profile'))
+        self.assertEqual(response.status_code, 200)
+
     def test_teacher_dashboard_requires_teacher_access(self):
         self.web_client.login(username='student1', password='TestPass123')
         response = self.web_client.get(reverse('teacher_dashboard'))
@@ -70,6 +92,25 @@ class AccountViewAndApiTests(TestCase):
         users = response.context['users']
         self.assertEqual(users.count(), 2)
         self.assertTrue(all(profile.role == 'student' for profile in users))
+
+    def test_teacher_dashboard_search_filters_results(self):
+        self.web_client.login(username='teacher1', password='TestPass123')
+        response = self.web_client.get(reverse('teacher_dashboard'), {'q': 'student1'})
+        self.assertEqual(response.status_code, 200)
+        users = response.context['users']
+        self.assertEqual(users.count(), 1)
+        self.assertEqual(users.first().user.username, 'student1')
+
+    def test_teacher_dashboard_search_no_results(self):
+        self.web_client.login(username='teacher1', password='TestPass123')
+        response = self.web_client.get(reverse('teacher_dashboard'), {'q': 'nomatch'})
+        self.assertEqual(response.status_code, 200)
+        users = response.context['users']
+        self.assertEqual(users.count(), 0)
+
+    def test_user_home_requires_login(self):
+        response = self.web_client.get(reverse('user_home'))
+        self.assertEqual(response.status_code, 302)
 
     def test_api_index_is_public(self):
         response = self.web_client.get(reverse('api_index'))
@@ -124,3 +165,8 @@ class AccountViewAndApiTests(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.data['user']['username'], 'student1')
         self.assertEqual(response.data['role'], 'student')
+
+    def test_api_user_profile_returns_404_for_missing_username(self):
+        self.api_client.force_authenticate(user=self.teacher_user)
+        response = self.api_client.get(reverse('api_user_profile', kwargs={'username': 'missinguser'}))
+        self.assertEqual(response.status_code, 404)

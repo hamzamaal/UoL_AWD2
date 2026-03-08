@@ -1,5 +1,5 @@
-from django.contrib import admin
-from .models import *  # Replace with explicit model imports once models are defined
+"""Admin module for the core app.
 
-# Register your models here.
-# admin.site.register(YourModel)  # Uncomment and replace once models are created.
+The core app currently does not define any database models for registration in
+Django admin.
+"""

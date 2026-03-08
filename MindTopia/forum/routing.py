@@ -1,6 +1,9 @@
+"""WebSocket routing for the forum chat feature."""
+
 from django.urls import path
-from forum.consumers import ChatConsumer
+
+from .consumers import ChatConsumer
 
 websocket_urlpatterns = [
-    path("ws/chat/<str:room_name>/", ChatConsumer.as_asgi()),  #  WebSocket URL
+    path('ws/chat/<str:room_name>/', ChatConsumer.as_asgi()),
 ]

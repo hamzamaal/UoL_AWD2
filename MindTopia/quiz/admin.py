@@ -1,9 +1,13 @@
+"""Admin configuration for the quiz app."""
+
 from django.contrib import admin
-from quiz.models import Quiz
 
-# Register your models here.
+from .models import Quiz
+
+
+@admin.register(Quiz)
 class QuizAdmin(admin.ModelAdmin):
-	list_display = ('question',)
+    """Display quiz questions in the Django admin interface."""
 
-
-admin.site.register(Quiz, QuizAdmin)
+    list_display = ('question', 'course')
+    search_fields = ('question', 'course__title')

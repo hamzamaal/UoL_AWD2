@@ -1,30 +1,35 @@
+"""APIView classes for quiz-related API endpoints."""
+
 from rest_framework import generics
 from rest_framework.permissions import AllowAny
+
 from quiz.models import Quiz
+
 from .serializers import QuizApiSerializer
 
 
-# Public API endpoint
 class QuizApiList(generics.ListAPIView):
-    """Returns all quiz questions (Public)"""
+    """Return the public list of all quiz questions."""
+
     queryset = Quiz.objects.all().order_by('id')
     serializer_class = QuizApiSerializer
     permission_classes = [AllowAny]
 
 
-# Public API endpoint
 class QuizApiDetail(generics.RetrieveAPIView):
-    """Returns one quiz question by primary key (Public)"""
+    """Return the public API detail view for one quiz question."""
+
     queryset = Quiz.objects.all()
     serializer_class = QuizApiSerializer
     permission_classes = [AllowAny]
 
 
-# Public API endpoint
 class QuizByCourseApiList(generics.ListAPIView):
-    """Returns quiz questions for one course (Public)"""
+    """Return public quiz questions filtered to a single course."""
+
     serializer_class = QuizApiSerializer
     permission_classes = [AllowAny]
 
     def get_queryset(self):
+        """Filter quiz questions to the course referenced in the URL."""
         return Quiz.objects.filter(course_id=self.kwargs['course_id']).order_by('id')
