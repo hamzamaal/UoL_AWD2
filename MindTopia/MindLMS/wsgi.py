@@ -1,16 +1,16 @@
-"""
-WSGI config for MindLMS project.
+"""WSGI configuration for the MindLMS project.
 
-It exposes the WSGI callable as a module-level variable named ``application``.
-
-For more information on this file, see
-https://docs.djangoproject.com/en/2.1/howto/deployment/wsgi/
+Exposes the WSGI callable as the module-level variable ``application``.
 """
 
 import os
 
 from django.core.wsgi import get_wsgi_application
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'MindLMS.settings')
 
+# Set the default Django settings module.
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "MindLMS.settings")
+
+
+# Create the WSGI application used by production servers.
 application = get_wsgi_application()

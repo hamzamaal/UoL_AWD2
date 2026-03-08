@@ -22,27 +22,31 @@ class ApiIndexView(APIView):
     permission_classes = [AllowAny]
 
     def get(self, request):
-        """Return the grouped list of public and teacher-only endpoints."""
+        """Return grouped public and teacher-only API routes."""
         return Response(
             {
-                'MindTopia API': {
-                    'Public Endpoints': {
-                        'Courses': reverse('api_courses', request=request),
-                        'Course Detail': request.build_absolute_uri('/api/courses/<id>/'),
-                        'Quiz List': reverse('api_quiz_list', request=request),
-                        'Quiz Detail': request.build_absolute_uri('/api/quiz/<id>/'),
-                        'Course Quiz': request.build_absolute_uri(
-                            '/api/courses/<course_id>/quiz/'
+                "MindTopia API": {
+                    "Public Endpoints": {
+                        "Courses": reverse("api_courses", request=request),
+                        "Course Detail": request.build_absolute_uri(
+                            "/api/courses/<id>/"
+                        ),
+                        "Quiz List": reverse("api_quiz_list", request=request),
+                        "Quiz Detail": request.build_absolute_uri(
+                            "/api/quiz/<id>/"
+                        ),
+                        "Course Quiz": request.build_absolute_uri(
+                            "/api/courses/<course_id>/quiz/"
                         ),
                     },
-                    'Teacher Only Endpoints': {
-                        'Users': reverse('api_users', request=request),
-                        'Students': reverse('api_students', request=request),
-                        'User Profile': request.build_absolute_uri(
-                            '/api/user/<username>/'
+                    "Teacher Only Endpoints": {
+                        "Users": reverse("api_users", request=request),
+                        "Students": reverse("api_students", request=request),
+                        "User Profile": request.build_absolute_uri(
+                            "/api/user/<username>/"
                         ),
-                        'Course Feedback': request.build_absolute_uri(
-                            '/api/courses/<course_id>/feedback/'
+                        "Course Feedback": request.build_absolute_uri(
+                            "/api/courses/<course_id>/feedback/"
                         ),
                     },
                 }
@@ -50,32 +54,39 @@ class ApiIndexView(APIView):
         )
 
 
+# Project-level URL patterns.
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('api/', ApiIndexView.as_view(), name='api_index'),
-    path('', include('core.urls')),
-    path('', include('accounts.urls')),
-    path('', include('courses.urls')),
-    path('donate/', include('donate.urls')),
-    path('instructors/', include('instructors.urls')),
-    path('feedback/', include('feedback.urls')),
-    path('questions/', include('quiz.urls')),
-    path('api/', include('quizapi.urls')),
-    path('discussion_forum/', include('forum.urls')),
-    path('chat/', include('forum.urls')),
+    path("admin/", admin.site.urls),
+    path("api/", ApiIndexView.as_view(), name="api_index"),
+    path("", include("core.urls")),
+    path("", include("accounts.urls")),
+    path("", include("courses.urls")),
+    path("donate/", include("donate.urls")),
+    path("instructors/", include("instructors.urls")),
+    path("feedback/", include("feedback.urls")),
+    path("questions/", include("quiz.urls")),
+    path("api/", include("quizapi.urls")),
+    path("discussion_forum/", include("forum.urls")),
+    path("chat/", include("forum.urls")),
 ]
 
+
+# ASGI application for HTTP and WebSocket support.
 application = ProtocolTypeRouter(
     {
-        'http': get_asgi_application(),
-        'websocket': AuthMiddlewareStack(
+        "http": get_asgi_application(),
+        "websocket": AuthMiddlewareStack(
             URLRouter(forum.routing.websocket_urlpatterns)
         ),
     }
 )
 
+
+# Enable DRF format suffixes such as .json where supported.
 urlpatterns = format_suffix_patterns(urlpatterns)
 
+
+# Serve static and media files during development.
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
     urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
