@@ -1,59 +1,128 @@
-{% extends 'base.html' %}
+{% extends "base.html" %}
 {% load crispy_forms_tags %}
 
+{# ---------------------------------------------------------------------
+   Teacher Dashboard
+   ---------------------------------------------------------------------
+   Displays a searchable list of students for teachers. Each student is
+   shown as a profile card with a link to view their profile and
+   registered courses.
+#}
+
 {% block content %}
+
+<!-- Page header -->
 <div class="mb-4">
     <h2 class="section-title text-center">Teacher Dashboard</h2>
-    <p class="section-subtitle text-center">Search users quickly and review profile cards in a cleaner dashboard layout.</p>
+    <p class="section-subtitle text-center">
+        Search users quickly and review profile cards in a cleaner dashboard layout.
+    </p>
 </div>
 
+<!-- Search toolbar -->
 <div class="search-toolbar">
     <div class="row align-items-center g-3">
+
+        <!-- Search input -->
         <div class="col-md-8">
-            <label for="dashboardSearch" class="form-label fw-semibold">Search by username, name or role</label>
-            <input id="dashboardSearch" type="text" name="q" class="form-control form-control-lg" placeholder="Search users..." value="{{ query }}">
+            <label for="dashboardSearch" class="form-label fw-semibold">
+                Search by username, name or role
+            </label>
+
+            <input
+                id="dashboardSearch"
+                type="text"
+                name="q"
+                class="form-control form-control-lg"
+                placeholder="Search users..."
+                value="{{ query }}"
+            >
         </div>
+
+        <!-- Dynamic result counter (used by client-side search JS) -->
         <div class="col-md-4">
             <div class="h-100 d-flex align-items-end justify-content-md-end">
                 <div id="resultCount" class="result-chip"></div>
             </div>
         </div>
+
     </div>
 </div>
 
+<!-- Student profile cards -->
 <div class="row g-4">
+
     {% if users %}
         {% for user in users %}
-            <div class="col-lg-4 col-md-6" data-search-card data-search-text="{{ user.user.username }} {{ user.user.first_name }} {{ user.user.last_name }} {{ user.role }}">
-                <div class="card border-0 section-card h-100 hover-card overflow-hidden">
-                    <img src="{{ user.image.url }}" class="forum-card-img" alt="{{ user.user.username }}">
-                    <div class="card-body text-center p-4">
-                        <h5 class="fw-bold mb-2">{{ user.user.username }}</h5>
-                        <p class="text-muted mb-2">{{ user.user.first_name }} {{ user.user.last_name }}</p>
 
-                        {% if user.role == 'student' %}
-                            <span class="badge text-bg-success rounded-pill px-3 py-2">Student</span>
+            <!-- Individual student card -->
+            <div
+                class="col-lg-4 col-md-6"
+                data-search-card
+                data-search-text="{{ user.user.username }} {{ user.user.first_name }} {{ user.user.last_name }} {{ user.role }}"
+            >
+
+                <div class="card border-0 section-card h-100 hover-card overflow-hidden">
+
+                    <!-- Student profile image -->
+                    <img
+                        src="{{ user.image.url }}"
+                        class="forum-card-img"
+                        alt="{{ user.user.username }}"
+                    >
+
+                    <div class="card-body text-center p-4">
+
+                        <!-- Username -->
+                        <h5 class="fw-bold mb-2">{{ user.user.username }}</h5>
+
+                        <!-- Full name -->
+                        <p class="text-muted mb-2">
+                            {{ user.user.first_name }} {{ user.user.last_name }}
+                        </p>
+
+                        <!-- Role badge -->
+                        {% if user.role == "student" %}
+                            <span class="badge text-bg-success rounded-pill px-3 py-2">
+                                Student
+                            </span>
                         {% else %}
-                            <span class="badge text-bg-info rounded-pill px-3 py-2">{{ user.role|title }}</span>
+                            <span class="badge text-bg-info rounded-pill px-3 py-2">
+                                {{ user.role|title }}
+                            </span>
                         {% endif %}
 
+                        <!-- Profile navigation -->
                         <div class="mt-3">
-                            <a href="{% url 'user_home_username' user.user.username %}" class="btn btn-outline-primary rounded-pill px-4">
+                            <a
+                                href="{% url 'user_home_username' user.user.username %}"
+                                class="btn btn-outline-primary rounded-pill px-4"
+                            >
                                 View Profile & Courses
                             </a>
                         </div>
+
                     </div>
                 </div>
             </div>
+
         {% endfor %}
+
     {% else %}
+
+        <!-- Empty state when no users exist -->
         <div class="col-12">
             <div class="empty-state">
                 <i class="fas fa-users"></i>
                 <h5 class="fw-bold">No users found</h5>
-                <p class="text-muted mb-0">No user records are currently available in the dashboard.</p>
+                <p class="text-muted mb-0">
+                    No user records are currently available in the dashboard.
+                </p>
             </div>
         </div>
+
     {% endif %}
+
 </div>
+
 {% endblock %}

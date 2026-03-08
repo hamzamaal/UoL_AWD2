@@ -1,77 +1,69 @@
-<!-- Extend the main base template used across the site -->
-{% extends 'base.html' %}
-
-<!-- Load static files such as CSS -->
+{% extends "base.html" %}
 {% load static %}
-
-<!-- Load Crispy Forms to render Django forms with Bootstrap styling -->
 {% load crispy_forms_tags %}
 
+{# ---------------------------------------------------------------------
+   Registration Page
+   ---------------------------------------------------------------------
+   Displays the user registration form and provides a link for
+   existing users to navigate to the login page.
+#}
+
 {% block head %}
+    <!-- Page title shown in the browser tab -->
+    <title>Register Here!</title>
 
-<!-- Page title displayed in the browser tab -->
-<title>Register Here!</title>
-
-<!-- Link to the stylesheet used for styling the page -->
-<link rel="stylesheet" type="text/css" href="{% static 'css/forum.css' %}">
-
+    <!-- Custom stylesheet for page-specific styling -->
+    <link rel="stylesheet" type="text/css" href="{% static 'css/forum.css' %}">
 {% endblock %}
+
 
 {% block content %}
 
-<!-- Main container for the registration page -->
 <div class="container py-5">
 
-    <!-- Center the registration form on the page -->
+    <!-- Centered registration form layout -->
     <div class="row justify-content-center">
-
-        <!-- Limit the width of the form -->
         <div class="col-md-6">
 
-            <!-- Card layout to visually contain the registration form -->
+            <!-- Registration form card -->
             <div class="card shadow-sm border-0">
-
-                <!-- Card body containing form elements -->
                 <div class="card-body">
 
-                    <!-- Heading for the registration section -->
+                    <!-- Page heading -->
                     <h3 class="text-center fw-bold mb-4">Join Today</h3>
 
                     <!-- User registration form -->
                     <form method="POST">
-
-                        <!-- CSRF protection required for Django forms -->
                         {% csrf_token %}
 
-                        <!-- Render the registration form using Crispy Forms -->
+                        <!-- Render Django form fields with Crispy Forms -->
                         {{ form|crispy }}
 
-                        <!-- Container for the submit button -->
+                        <!-- Submit button -->
                         <div class="d-grid">
-
-                            <!-- Button used to submit the registration form -->
-                            <button class="btn btn-primary mt-3" type="submit">Sign Up</button>
-
+                            <button class="btn btn-primary mt-3" type="submit">
+                                Sign Up
+                            </button>
                         </div>
-
                     </form>
 
-                    <!-- Section with a link for existing users to log in -->
+                    <!-- Login link for existing users -->
                     <div class="border-top pt-3 mt-3 text-center">
-
                         <small class="text-muted">
-
-                            <!-- Link to the login page -->
-                            Already Have An Account? 
-                            <a href="{% url 'login' %}" class="ms-2 text-decoration-none">Sign In</a>
-
+                            Already Have An Account?
+                            <a href="{% url 'login' %}" class="ms-2 text-decoration-none">
+                                Sign In
+                            </a>
                         </small>
-
                     </div>
+
                 </div>
             </div>
+
         </div>
     </div>
+
 </div>
 
 {% endblock %}

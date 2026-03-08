@@ -1,21 +1,29 @@
-{% extends 'base.html' %} {# Inherit the main site layout including navigation and footer #}
-{% load static %} {# Enable use of Django static files such as CSS or images #}
+{% extends "base.html" %}
+{% load static %}
 
-{% block head %} {# Override the head section defined in base.html #}
+{# ---------------------------------------------------------------------
+   Page Head Section
+   ---------------------------------------------------------------------
+   Overrides the <head> block from base.html to provide a dynamic
+   title and page-specific styling.
+#}
+{% block head %}
 
-<title>{{ user.username }}'s Profile | MindTopia</title> {# Dynamic page title displaying the logged-in user's username #}
+<title>{{ user.username }}'s Profile | MindTopia</title>
 
 <style>
-    .profile-container { /* Main card container used to center and style the profile page */
+    /* Main card container used to center the profile content */
+    .profile-container {
         max-width: 800px;
         margin: auto;
-        background: #fff;
+        background: #ffffff;
         border-radius: 10px;
-        box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.1);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
         padding: 30px;
     }
 
-    .profile-img { /* Styling for the circular user profile image */
+    /* Circular user profile image styling */
+    .profile-img {
         width: 150px;
         height: 150px;
         object-fit: cover;
@@ -23,56 +31,78 @@
         border: 4px solid #4ca1af;
     }
 
-    .info-section { /* Container holding the user's profile information fields */
+    /* Section containing profile information fields */
+    .info-section {
         padding: 15px 0;
     }
 
-    .info-section p { /* Reduce spacing between information lines */
+    /* Reduce spacing between text rows */
+    .info-section p {
         margin-bottom: 5px;
     }
 </style>
 
 {% endblock %}
 
-{% block content %} {# Main content section inserted into the base template layout #}
 
-<div class="container py-5"> {# Bootstrap container adding spacing and responsive layout #}
+{# ---------------------------------------------------------------------
+   Page Content Section
+   ---------------------------------------------------------------------
+   Displays the user's profile information including profile image,
+   personal details, and a link to update their profile.
+#}
+{% block content %}
 
-    <div class="profile-container text-center"> {# Profile card layout centered on the page #}
+<div class="container py-5">
 
-        <!-- Profile Picture -->
-        <img src="{{ user.userprofile.image.url }}" class="profile-img mb-3" alt="Profile Picture"> <!-- Display user's profile image stored in UserProfile model -->
+    <!-- Profile card container -->
+    <div class="profile-container text-center">
 
-        <!-- User Info -->
-        <h2 class="fw-bold">{{ user.first_name }} {{ user.last_name }}</h2> <!-- Display user's first and last name from the User model -->
-        <p class="text-muted">@{{ user.username }}</p> <!-- Display username with muted styling -->
-        <p class="badge bg-primary">{{ user.userprofile.get_role_display }}</p> <!-- Display user role using Django model choice display -->
+        <!-- Profile image pulled from UserProfile model -->
+        <img src="{{ user.userprofile.image.url }}"
+             class="profile-img mb-3"
+             alt="Profile Picture">
 
-        <!-- Information Section -->
-        <div class="info-section text-start"> <!-- Section containing detailed profile information -->
+        <!-- Basic user identity information -->
+        <h2 class="fw-bold">
+            {{ user.first_name }} {{ user.last_name }}
+        </h2>
 
-            <h5 class="fw-semibold">Profile Details</h5> <!-- Section heading -->
+        <p class="text-muted">@{{ user.username }}</p>
 
-            <hr> <!-- Visual separator -->
+        <!-- User role displayed from UserProfile role choices -->
+        <p class="badge bg-primary">
+            {{ user.userprofile.get_role_display }}
+        </p>
 
-            <p><strong>Email:</strong> {{ user.email }}</p> <!-- Display email stored in Django User model -->
+        <!-- Detailed profile information -->
+        <div class="info-section text-start">
 
-            {% if user.userprofile.bio %} <!-- Only display bio if it exists -->
+            <h5 class="fw-semibold">Profile Details</h5>
+            <hr>
+
+            <p><strong>Email:</strong> {{ user.email }}</p>
+
+            {# Optional fields only render if values exist #}
+
+            {% if user.userprofile.bio %}
                 <p><strong>Bio:</strong> {{ user.userprofile.bio }}</p>
             {% endif %}
 
-            {% if user.userprofile.location %} <!-- Only display location if it exists -->
+            {% if user.userprofile.location %}
                 <p><strong>Location:</strong> {{ user.userprofile.location }}</p>
             {% endif %}
 
-            {% if user.userprofile.date_of_birth %} <!-- Only display date of birth if provided -->
+            {% if user.userprofile.date_of_birth %}
                 <p><strong>Date of Birth:</strong> {{ user.userprofile.date_of_birth }}</p>
             {% endif %}
 
         </div>
 
-        <!-- Update Profile Button -->
-        <a href="{% url 'profile_update' %}" class="btn btn-success mt-3">Update Your Profile</a> <!-- Link to the profile update page -->
+        <!-- Link to the profile update page -->
+        <a href="{% url 'profile_update' %}" class="btn btn-success mt-3">
+            Update Your Profile
+        </a>
 
     </div>
 </div>

@@ -2030,3 +2030,58 @@ footer .credits {
     font-size: 1.3rem;
   }
 }
+
+/*======================================
+//--//-->   CUSTOM NAVBAR DROPDOWN HOVER
+======================================*/
+
+/*
+  Enable dropdown menus to open on hover for desktop screens.
+  This improves initial menu responsiveness for the custom
+  MindTopia navbar used in base.html.
+*/
+
+@media (min-width: 992px) {
+
+  /* Keep dropdown parent positioned for reliable menu display */
+  .app-navbar .dropdown {
+    position: relative;
+  }
+
+  /*
+    Show dropdown menu on hover.
+    Bootstrap normally opens dropdowns on click via JavaScript,
+    but this rule allows hover-based access on desktop.
+  */
+  .app-navbar .dropdown:hover > .dropdown-menu {
+    display: block;
+    visibility: visible;
+    opacity: 1;
+    pointer-events: auto;
+    margin-top: 0;
+    transform: translateY(0);
+  }
+
+  /*
+    Hide dropdown menu by default while still allowing transition
+    effects and preventing layout shift.
+  */
+  .app-navbar .dropdown-menu {
+    display: block;
+    visibility: hidden;
+    opacity: 0;
+    pointer-events: none;
+    margin-top: 0;
+    transform: translateY(8px);
+    transition: opacity 0.2s ease, transform 0.2s ease;
+  }
+
+  /* Rotate dropdown arrow slightly for hover feedback */
+  .app-navbar .dropdown-toggle::after {
+    transition: transform 0.2s ease;
+  }
+
+  .app-navbar .dropdown:hover > .dropdown-toggle::after {
+    transform: rotate(180deg);
+  }
+}

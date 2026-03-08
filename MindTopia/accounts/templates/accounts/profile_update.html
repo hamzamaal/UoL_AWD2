@@ -1,67 +1,49 @@
-<!-- Extend the base template so this page uses the common site layout -->
 {% extends "base.html" %}
-
-<!-- Load Crispy Forms so Django forms can be rendered with Bootstrap styling -->
 {% load crispy_forms_tags %}
-
-<!-- Load static files such as CSS -->
 {% load static %}
 
-<!-- Page head section -->
 {% block head %}
+    <title>Update Your Info!</title>
 
-<title>Update Your Info!</title>
-
-<!-- Link to the custom stylesheet used on this page -->
-<link rel="stylesheet" type="text/css" href="{% static 'css/forum.css' %}">
-
+    <!-- Custom stylesheet for profile-related page styling -->
+    <link rel="stylesheet" type="text/css" href="{% static 'css/forum.css' %}">
 {% endblock %}
 
-<!-- Main page content -->
 {% block content %}
+    <!-- Main container for the profile update page -->
+    <div class="container py-5">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
 
-<!-- Bootstrap container to add spacing and keep content centered -->
-<div class="container py-5">
+                <!-- Profile update card -->
+                <div class="card shadow-sm border-0 p-4">
 
-    <!-- Row used to center the card horizontally -->
-    <div class="row justify-content-center">
-
-        <!-- Column width for better layout on medium and large screens -->
-        <div class="col-md-8">
-
-            <!-- Card component used to visually group the profile update section -->
-            <div class="card shadow-sm border-0 p-4">
-
-                <!-- Section displaying the current user's profile image -->
-                <div class="text-center">
-                    <img class="rounded-circle img-fluid mb-3" src="{{ user.userprofile.image.url }}" alt="Profile Image" >
-                </div>
-
-                <!-- Heading for the profile update section -->
-                <h3 class="text-center fw-bold mb-4">Profile Info</h3>
-
-                <!-- Form used to update user and profile information -->
-                <form method="POST" enctype="multipart/form-data">
-
-                    <!-- CSRF token required for security in Django forms -->
-                    {% csrf_token %}
-
-                    <!-- Render the user update form -->
-                    {{ u_form|crispy }}
-
-                    <!-- Render the profile update form -->
-                    {{ p_form|crispy }}
-
-                    <!-- Container for the submit button -->
-                    <div class="d-grid">
-                        <button class="btn btn-primary mt-3" type="submit">Update</button>
+                    <!-- Current profile image preview -->
+                    <div class="text-center">
+                        <img class="rounded-circle img-fluid mb-3" src="{{ user.userprofile.image.url }}" alt="Profile Image">
                     </div>
 
-                </form>
+                    <!-- Page heading -->
+                    <h3 class="text-center fw-bold mb-4">Profile Info</h3>
 
+                    <!-- Form for updating user and profile details -->
+                    <form method="POST" enctype="multipart/form-data">
+                        {% csrf_token %}
+
+                        <!-- User account fields -->
+                        {{ u_form|crispy }}
+
+                        <!-- Extended profile fields -->
+                        {{ p_form|crispy }}
+
+                        <!-- Submit button -->
+                        <div class="d-grid">
+                            <button class="btn btn-primary mt-3" type="submit">Update</button>
+                        </div>
+                    </form>
+
+                </div>
             </div>
         </div>
     </div>
-</div>
-
 {% endblock content %}
