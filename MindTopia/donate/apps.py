@@ -1,5 +1,9 @@
+"""Application configuration for the donate app."""
+
 from django.apps import AppConfig
 
 
 class DonateConfig(AppConfig):
-    name = 'donate'
+    """Configure the donate application."""
+
+    name = "donate"
