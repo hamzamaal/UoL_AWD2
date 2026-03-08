@@ -1,244 +1,193 @@
-# MindTopia -- Learning Management System
 
-## Project Overview
+# MindTopia – Online Learning Platform
 
-MindTopia is a web-based Learning Management System (LMS) developed
-using the Django framework. The platform allows students and teachers to
-interact in an online learning environment that supports course
-management, quizzes, discussion forums, and user profiles.
+MindTopia is a web-based learning management platform built with Django.
+It allows students and teachers to interact through courses, quizzes, forums, and real-time chat communication.
 
-The system demonstrates core full-stack web development concepts
-including user authentication, role-based access control, database
-modelling, and REST API integration.
+The application demonstrates a modular Django architecture with REST APIs, real-time communication using WebSockets, and role-based access control.
 
-This project was developed as part of the **UoL AWD2 coursework**.
-
-------------------------------------------------------------------------
-
-# Technologies Used
-
--   Python
--   Django
--   Django REST Framework
--   Bootstrap
--   HTML
--   CSS
--   SQLite
--   Pillow (Image Processing)
--   Django Crispy Forms
-
-------------------------------------------------------------------------
-
-# Project Structure
-
-    UoL_AWD2/
-    │
-    ├── MindTopia/
-    │   ├── manage.py
-    │   ├── requirements.txt
-    │   ├── db.sqlite3
-    │
-    │   ├── MindLMS/        # Django project configuration
-    │   │   ├── settings.py
-    │   │   ├── urls.py
-    │   │   ├── asgi.py
-    │   │   └── wsgi.py
-    │
-    │   ├── accounts/       # User registration and profiles
-    │   ├── courses/        # Course management
-    │   ├── forum/          # Discussion forums
-    │   ├── quiz/           # Quiz system
-    │   ├── quizapi/        # REST API functionality
-    │   ├── instructors/    # Teacher related features
-    │   ├── donate/         # Donation functionality
-    │   ├── feedback/       # Feedback submission
-    │   ├── core/           # Core views and templates
-    │
-    │   ├── static/         # Static files (CSS, JS)
-    │   ├── media/          # Uploaded images
-    │   └── templates/      # Global templates
-
-------------------------------------------------------------------------
+---
 
 # Features
 
-## User Authentication
+## User Accounts
+- User registration and authentication
+- Profile management
+- Role-based access (Student / Teacher)
 
--   User registration
--   Login and logout
--   Profile management
+## Courses
+- Browse available courses
+- Register for courses
+- Course detail pages
+- Submit course feedback
 
-## Role-Based Access
+## Quizzes
+- Multiple-choice quizzes linked to courses
+- Automatic scoring and result feedback
+- Course-specific quiz questions
 
-Users can be assigned one of two roles:
+## Discussion Forum
+- Create forum posts
+- Update and delete posts
+- Comment on posts
+- Community discussions between users
 
--   **Student**
-    -   Register for courses
-    -   Participate in quizzes
-    -   View and update profile
-    -   Participate in discussions
--   **Teacher**
-    -   View student information
-    -   Access teacher dashboard
+## Real-Time Messaging (WebSockets)
+The application includes **real-time chat functionality** using **Django Channels and WebSockets**.
 
-## User Profiles
+Features include:
+- Live text chat between students and teachers
+- Room-based chat channels
+- Instant message broadcasting
+- WebSocket connections handled by Django Channels
 
-Each user has a custom profile containing:
+Users can join a chat room and communicate instantly without refreshing the page.
 
--   Profile image
--   Bio
--   Location
--   Date of birth
--   Status updates
+## Feedback System
+- Users can submit structured feedback about the platform and courses.
 
-## Course Management
+## Instructor Directory
+- Displays available instructors and their information.
 
-Students can register for courses through a many-to-many relationship
-between users and courses.
-
-## Quiz System
-
-The platform includes a quiz module that allows students to take
-assessments.
-
-## Forum System
-
-Users can participate in discussion forums related to courses.
+## Donation Page
+- Authenticated users can access the donation page to support the platform.
 
 ## REST API
+The platform exposes API endpoints using **Django REST Framework**, including:
 
-The project integrates **Django REST Framework** to expose data via API
-endpoints.
+- Course list and detail endpoints
+- Quiz endpoints
+- Course feedback endpoints
+- Teacher-only user management endpoints
 
-Example serializers:
+---
 
--   `UserSerializer`
--   `UserProfileSerializer`
+# Technologies Used
 
-------------------------------------------------------------------------
+- Python 3
+- Django 4
+- Django REST Framework
+- Django Channels (WebSockets)
+- Bootstrap 5
+- SQLite
+- HTML / CSS / JavaScript
 
-# Installation Guide
+---
 
-## 1. Clone the Repository
+# Project Structure
 
-``` bash
-git clone <repository-url>
-cd UoL_AWD2
-```
+MindTopia/
+│
+├── accounts        # User authentication and profile management
+├── core            # Home, about, and general pages
+├── courses         # Course management and feedback
+├── donate          # Donation page
+├── feedback        # Platform feedback forms
+├── forum           # Discussion forum and real-time chat
+├── instructors     # Instructor directory
+├── quiz            # Course quiz functionality
+├── quizapi         # Quiz REST API endpoints
+│
+├── MindLMS         # Main project configuration
+│
+├── templates       # Shared templates
+├── static          # CSS, JavaScript, images
+│
+└── manage.py
 
-------------------------------------------------------------------------
+---
 
-## 2. Create Virtual Environment
+# Installation
 
-``` bash
+Clone the repository:
+
+git clone https://github.com/hamzamaal/UoL_AWD2.git
+cd UoL_AWD2/MindTopia
+
+Create and activate a virtual environment:
+
 python -m venv venv
-```
-
-Activate the environment:
-
-### Mac / Linux
-
-``` bash
 source venv/bin/activate
-```
 
-### Windows
+Install dependencies:
 
-``` bash
-venv\Scripts\activate
-```
+pip install -r requirements.txt
 
-------------------------------------------------------------------------
+Apply database migrations:
 
-## 3. Install Dependencies
-
-``` bash
-pip install -r MindTopia/requirements.txt
-```
-
-------------------------------------------------------------------------
-
-## 4. Apply Database Migrations
-
-``` bash
-cd MindTopia
 python manage.py migrate
-```
 
-------------------------------------------------------------------------
+Create an admin account:
 
-## 5. Create Superuser
-
-``` bash
 python manage.py createsuperuser
-```
 
-------------------------------------------------------------------------
+Run the development server:
 
-## 6. Run Development Server
-
-``` bash
 python manage.py runserver
-```
 
-Open the application in the browser:
+Open the application:
 
-    http://127.0.0.1:8000
+http://127.0.0.1:8000
 
-Admin interface:
+---
 
-    http://127.0.0.1:8000/admin
+# Running Tests
 
-------------------------------------------------------------------------
+The project includes automated tests for multiple modules.
 
-# Static and Media Files
+Run all tests:
 
-Static files such as CSS and JavaScript are stored in:
+python manage.py test
 
-    MindTopia/static/
+Run tests for specific modules:
 
-User uploaded files such as profile images are stored in:
+python manage.py test accounts
+python manage.py test courses
+python manage.py test forum
+python manage.py test quiz
 
-    MindTopia/media/
+---
 
-------------------------------------------------------------------------
+# Testing Real-Time Chat
 
-# Key Dependencies
+To test the WebSocket chat functionality:
 
-Major dependencies used in this project include:
+1. Start the Django server.
+2. Log in with two different users.
+3. Open the chat room page in two browser windows.
+4. Send messages from one window.
+5. Messages should appear instantly in the other window.
 
--   Django
--   djangorestframework
--   Pillow
--   django-crispy-forms
--   crispy-bootstrap5
+This confirms WebSocket real-time communication is functioning correctly.
 
-------------------------------------------------------------------------
+---
 
-# Security Notes
+# Advanced Features Demonstrated
 
-For development purposes the following settings are enabled:
+The project includes several advanced web development techniques:
 
-    DEBUG = True
-    ALLOWED_HOSTS = ["*"]
+- Django Channels WebSocket integration
+- Role-based access control
+- REST API design with Django REST Framework
+- Modular Django application structure
+- Automated unit testing
 
-For production deployment these values should be changed.
-
-------------------------------------------------------------------------
+---
 
 # Future Improvements
 
-Potential future improvements include:
+Possible future enhancements include:
 
--   Real-time messaging between students and teachers
--   Course progress tracking
--   Assignment submission functionality
--   Notifications system
--   Containerized deployment using Docker
--   Redis integration for Django Channels
+- Video conferencing integration
+- File sharing within chat rooms
+- Real-time collaborative whiteboards
+- Push notifications for course updates
+- Improved UI/UX styling
 
-------------------------------------------------------------------------
+---
 
 # Author
 
-Developed as part of the **UoL AWD2 coursework project**.
+Hamza Maal
+University of London – BSc Computer Science
+Advanced Web Development

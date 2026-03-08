@@ -13,4 +13,4 @@ def instruc(request):
         "ins": instructors,
     }
 
-    return render(request, "instructo.html", context)
+    return render(request, "instructors.html", context)
