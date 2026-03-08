@@ -1,4 +1,4 @@
-"""Serializer classes for the quiz API app."""
+"""Serializer classes for the quiz API application."""
 
 from rest_framework import serializers
 
@@ -6,22 +6,23 @@ from quiz.models import Quiz
 
 
 class QuizApiSerializer(serializers.ModelSerializer):
-    """Serialize quiz questions together with the related course title."""
+    """Serialize quiz questions along with the related course title."""
 
-    course_title = serializers.CharField(source='course.title', read_only=True)
+    # Read-only field exposing the course title from the related model.
+    course_title = serializers.CharField(source="course.title", read_only=True)
 
     class Meta:
-        """Define the quiz fields returned by the API."""
+        """Define the fields returned by the quiz API serializer."""
 
         model = Quiz
         fields = [
-            'id',
-            'course',
-            'course_title',
-            'question',
-            'option1',
-            'option2',
-            'option3',
-            'option4',
-            'answer',
+            "id",
+            "course",
+            "course_title",
+            "question",
+            "option1",
+            "option2",
+            "option3",
+            "option4",
+            "answer",
         ]
