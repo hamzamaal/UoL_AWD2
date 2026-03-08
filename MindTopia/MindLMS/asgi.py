@@ -10,17 +10,22 @@ from channels.auth import AuthMiddlewareStack
 from channels.routing import ProtocolTypeRouter, URLRouter
 from django.core.asgi import get_asgi_application
 
-import forum.routing
 
-
-# Set the default Django settings module for the ASGI application.
+# Set the Django settings module before importing anything that depends on it.
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "MindLMS.settings")
 
+# Initialize Django ASGI application early so the app registry is ready
+# before importing WebSocket routing and consumers.
+django_asgi_app = get_asgi_application()
 
-# Define the ASGI application handling HTTP and WebSocket protocols.
+# Import WebSocket routing only after Django has been initialized.
+import forum.routing  # noqa: E402
+
+
+# Route standard HTTP requests to Django and WebSocket traffic to Channels.
 application = ProtocolTypeRouter(
     {
-        "http": get_asgi_application(),
+        "http": django_asgi_app,
         "websocket": AuthMiddlewareStack(
             URLRouter(forum.routing.websocket_urlpatterns)
         ),

@@ -19,11 +19,15 @@ ALLOWED_HOSTS = ["*"]
 
 
 # Installed Django, third-party, and local applications.
+# Daphne should appear before django.contrib.staticfiles so the ASGI-aware
+# runserver command is used during development.
 INSTALLED_APPS = [
+    "daphne",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
     "django.contrib.sessions",
+    "django.middleware.common",
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "channels",

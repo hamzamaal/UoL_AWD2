@@ -1,18 +1,10 @@
 {% extends "base.html" %}
 {% load crispy_forms_tags %}
 
-{# ---------------------------------------------------------------------
-   User Home Page
-   ---------------------------------------------------------------------
-   Displays a user's profile summary, optional status update form, current
-   status message, and list of registered courses.
-#}
-
 {% block head %}
     <title>{{ user.user.username }}'s Home | MindTopia</title>
 
     <style>
-        /* Styling for the displayed status message box */
         .status-box {
             background: #f8f9fa;
             padding: 10px;
@@ -42,7 +34,16 @@
             <p class="text-muted">@{{ user.user.username }}</p>
             <span class="badge bg-primary">{{ user.get_role_display }}</span>
 
-            <!-- Notice shown when viewing another user's profile -->
+            <!-- Live chat quick access -->
+            <div class="mt-4">
+                <a
+                    href="{% url 'chat_room' room_name='general' %}"
+                    class="btn btn-outline-success rounded-pill px-4"
+                >
+                    <i class="fas fa-comments me-2"></i>Open Live Chat
+                </a>
+            </div>
+
             {% if request.user != user.user %}
                 <div class="mt-3">
                     <p class="text-muted mb-0">
@@ -51,7 +52,6 @@
                 </div>
             {% endif %}
 
-            <!-- Status update form shown only to the profile owner -->
             {% if request.user == user.user %}
                 <form method="POST" class="mt-4">
                     {% csrf_token %}
@@ -60,21 +60,18 @@
                 </form>
             {% endif %}
 
-            <!-- Current status update, shown only if one exists -->
             {% if user.status_update %}
                 <div class="status-box mt-3">
                     <p><strong>Status:</strong> "{{ user.status_update }}"</p>
                 </div>
             {% endif %}
 
-            <!-- Course section heading changes depending on profile owner -->
             {% if request.user == user.user %}
                 <h4 class="mt-4">My Courses</h4>
             {% else %}
                 <h4 class="mt-4">Registered Courses</h4>
             {% endif %}
 
-            <!-- Registered course list -->
             <ul class="list-group">
                 {% for course in user.registered_courses.all %}
                     <li class="list-group-item d-flex justify-content-between align-items-center">

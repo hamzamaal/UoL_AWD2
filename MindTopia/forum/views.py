@@ -88,9 +88,15 @@ def add_comment_to_post(request, pk):
     return render(request, "forum/add_comment_to_post.html", context)
 
 
+@login_required
 def chat_room(request, room_name):
-    """Render the WebSocket chat room page for the requested room."""
+    """Render the real-time chat room page with recent message history."""
+    from .models import ChatMessage
+
+    messages = ChatMessage.objects.filter(room_name=room_name).order_by("timestamp")[:100]
+
     context = {
         "room_name": room_name,
+        "chat_history": messages,
     }
     return render(request, "forum/chat.html", context)
