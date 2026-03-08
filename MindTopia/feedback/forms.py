@@ -6,10 +6,16 @@ from .models import Feedback
 
 
 class FeedbackForm(forms.ModelForm):
-    """Model form used to collect structured user feedback."""
+    """Form used to collect structured feedback from users."""
 
     class Meta:
-        """Specify the Feedback model fields included in the form."""
+        """Define the Feedback model fields exposed in the form."""
 
         model = Feedback
-        fields = ["ui", "sug", "satisfy", "sugg", "rating"]
+        fields = [
+            "ui",
+            "sug",
+            "satisfy",
+            "sugg",
+            "rating",
+        ]

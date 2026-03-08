@@ -5,7 +5,7 @@ from django.db import models
 
 
 class Feedback(models.Model):
-    """Store structured website and course feedback submitted by users."""
+    """Store structured website and course feedback from users."""
 
     YES_NO_CHOICES = (
         ("y", "Yes"),
@@ -56,5 +56,5 @@ class Feedback(models.Model):
     )
 
     def __str__(self):
-        """Return the username if available, otherwise label as anonymous."""
+        """Return the username when available, otherwise a fallback label."""
         return self.user.username if self.user else "Anonymous Feedback"

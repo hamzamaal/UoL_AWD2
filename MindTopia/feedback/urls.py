@@ -6,6 +6,5 @@ from . import views
 
 
 urlpatterns = [
-    # Feedback page route
     path("", views.feed, name="feedback"),
 ]
