@@ -1,13 +1,13 @@
-"""Views for the core app."""
+"""Views for the core application."""
 
 from django.shortcuts import render
 
 
 def home(request):
-    """Render the public landing page."""
-    return render(request, 'home.html')
+    """Render the public home page."""
+    return render(request, "home.html")
 
 
 def about(request):
-    """Render the application's about page."""
-    return render(request, 'about.html')
+    """Render the application about page."""
+    return render(request, "about.html")
