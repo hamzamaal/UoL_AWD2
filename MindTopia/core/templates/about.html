@@ -5,44 +5,18 @@
 {% block head %}
 <title>About MindTopia</title>
 
-<style>
-    /* Hero Section Background */
-    .hero-section {
-        position: relative;
-        background: url("{% static 'img/headline-about.jpg' %}") center/cover no-repeat;
-        height: 300px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        text-align: center;
-    }
-    .hero-section::before {
-        content: "";
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(0, 0, 0, 0.6);
-    }
-    .hero-content {
-        position: relative;
-        color: white;
-    }
-    /* Rounded Images with Soft Shadows */
-    .about-img {
-        border-radius: 15px;
-        box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2);
-    }
-</style>
+<link rel="stylesheet" href="{% static 'css/about.css' %}">
 {% endblock %}
 
 {% block content %}
 
 <!-- Hero Section -->
-<section class="hero-section">
+<section class="hero-section" style="background-image:url('{% static 'img/headline-about.jpg' %}')">
     <div class="hero-content">
-        <h1 class="fw-bold">We Provide Great Content for <span class="text-warning">Spirited Learners</span></h1>
+        <h1 class="fw-bold">
+            We Provide Great Content for 
+            <span class="text-warning">Spirited Learners</span>
+        </h1>
     </div>
 </section>
 
@@ -51,8 +25,12 @@
     <div class="container">
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb bg-light p-2 justify-content-center">
-                <li class="breadcrumb-item"><a href="{% url 'home' %}" class="text-decoration-none">Home</a></li>
-                <li class="breadcrumb-item active text-primary" aria-current="page">About</li>
+                <li class="breadcrumb-item">
+                    <a href="{% url 'home' %}" class="text-decoration-none">Home</a>
+                </li>
+                <li class="breadcrumb-item active text-primary" aria-current="page">
+                    About
+                </li>
             </ol>
         </nav>
     </div>
@@ -61,6 +39,7 @@
 <!-- About Section -->
 <section class="py-5">
     <div class="container">
+
         <div class="text-center">
             <img src="{% static 'img/students.png' %}" alt="MindTopia" class="img-fluid about-img">
             <h3 class="mt-3 fw-bold">MindTopia</h3>
@@ -68,21 +47,36 @@
         </div>
 
         <div class="row align-items-center g-4 mt-4">
+
             <div class="col-md-6 text-center">
-                <img src="{% static 'img/whoarewe.webp' %}" alt="Learning at MindTopia" class="img-fluid about-img">
+                <img src="{% static 'img/whoarewe.webp' %}" 
+                     alt="Learning at MindTopia"
+                     class="img-fluid about-img">
             </div>
+
             <div class="col-md-6">
                 <h3 class="fw-bold">Who <span class="text-primary">Are We?</span></h3>
+
                 <p class="lead text-muted">
-                    At MindTopia, we believe that knowledge should be free, accessible, and limitless. We are a global learning community dedicated to providing high-quality educational resources at no cost to learners worldwide.
+                    At MindTopia, we believe knowledge should be free, accessible,
+                    and limitless. We are a global learning community providing
+                    high-quality educational resources at no cost.
                 </p>
+
                 <p class="text-muted">
-                    Our platform is built for students, educators, and lifelong learners who are passionate about expanding their knowledge in computer science, technology, and beyond. Whether you're looking to watch educational videos, take interactive quizzes, or engage in thought-provoking discussions—MindTopia is your gateway to a smarter, more connected world.
+                    Our platform supports students, educators, and lifelong learners
+                    interested in computer science, technology, and more. Watch
+                    educational videos, complete quizzes, and participate in
+                    community discussions.
                 </p>
+
                 <p class="text-muted">
-                    MindTopia is developed with the guidance and expertise of passionate educators and technology professionals. Through the dedication of our mentors and contributors, we have successfully created a platform that makes high-quality education free and accessible to everyone.
+                    MindTopia is developed with guidance from educators and
+                    technology professionals committed to making high-quality
+                    education accessible worldwide.
                 </p>
             </div>
+
         </div>
     </div>
 </section>
