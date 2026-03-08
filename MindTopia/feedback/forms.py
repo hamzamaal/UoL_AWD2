@@ -1,4 +1,4 @@
-"""Form definitions for the feedback app."""
+"""Form definitions for the feedback application."""
 
 from django import forms
 
@@ -6,10 +6,10 @@ from .models import Feedback
 
 
 class FeedbackForm(forms.ModelForm):
-    """Collect structured website and course feedback from a user."""
+    """Model form used to collect structured user feedback."""
 
     class Meta:
-        """Define the fields exposed to the feedback form."""
+        """Specify the Feedback model fields included in the form."""
 
         model = Feedback
-        fields = ['ui', 'sug', 'satisfy', 'sugg', 'rating']
+        fields = ["ui", "sug", "satisfy", "sugg", "rating"]

@@ -1,4 +1,4 @@
-"""Views for the feedback app."""
+"""View logic for the feedback application."""
 
 from django.shortcuts import render
 
@@ -6,13 +6,20 @@ from .forms import FeedbackForm
 
 
 def feed(request):
-    """Display and process the feedback form."""
+    """Render the feedback page and handle form submission."""
     form = FeedbackForm(request.POST or None)
 
-    if request.method == 'POST' and form.is_valid():
+    if request.method == "POST" and form.is_valid():
         feedback = form.save(commit=False)
+
+        # Attach the authenticated user if available
         if request.user.is_authenticated:
             feedback.user = request.user
+
         feedback.save()
 
-    return render(request, 'feedback.html', {'form': form})
+    return render(
+        request,
+        "feedback.html",
+        {"form": form},
+    )

@@ -1,5 +1,9 @@
+"""Application configuration for the feedback app."""
+
 from django.apps import AppConfig
 
 
 class FeedbackConfig(AppConfig):
-    name = 'feedback'
+    """Configure the feedback application."""
+
+    name = "feedback"
