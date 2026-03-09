@@ -14,18 +14,20 @@ class ForumViewTests(TestCase):
         """Create reusable users, client, and a sample forum post."""
         self.client = Client()
 
-        # Author of the sample post
+        # Author of the sample post.
         self.author = User.objects.create_user(
             username="author1",
             password="TestPass123",
         )
 
-        # Another user for permission checks
+        # Another user for permission checks.
         self.other_user = User.objects.create_user(
             username="otheruser",
             password="TestPass123",
         )
 
+        # Create a sample forum post for detail, update, delete,
+        # and comment-related tests.
         self.post = Post.objects.create(
             title="My First Forum Post",
             content="This is the body of the first forum post.",
@@ -142,9 +144,20 @@ class ForumViewTests(TestCase):
         self.assertEqual(response.status_code, 302)
 
     def test_chat_room_page_loads(self):
-        """Verify the chat room page renders for a given room name."""
+        """Verify the chat room page renders for a logged-in user."""
+        self.client.login(username="author1", password="TestPass123")
+
         response = self.client.get(
             reverse("chat_room", kwargs={"room_name": "general"})
         )
+
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "general")
+
+    def test_chat_room_requires_login(self):
+        """Verify anonymous users are redirected from the chat room page."""
+        response = self.client.get(
+            reverse("chat_room", kwargs={"room_name": "general"})
+        )
+
+        self.assertEqual(response.status_code, 302)
