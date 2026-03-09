@@ -1,0 +1,9 @@
+#!/bin/sh
+'''exec' "/Users/hamzamaal/Library/CloudStorage/GoogleDrive-hamza.maal@gmail.com/My Drive/Documents/Knowledge/Coursera/University of London/BSc degree/L6/[CM3035] Advanced Web Development/Github/UoL_AWD2/MindTopia/venv312/bin/python3.12" "$0" "$@"
+' '''
+import sys
+from twisted.mail.scripts.mailmail import run
+if __name__ == '__main__':
+    if sys.argv[0].endswith('.exe'):
+        sys.argv[0] = sys.argv[0][:-4]
+    sys.exit(run())

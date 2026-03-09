@@ -106,16 +106,24 @@ cd UoL_AWD2/MindTopia
 
 Create and activate a virtual environment:
 
-python -m venv venv
-source venv/bin/activate
+python3.12 -m venv venv312
+source venv312/bin/activate
 
 Install dependencies:
 
 pip install -r requirements.txt
+pip install daphne
 
 Apply database migrations:
 
 python manage.py migrate
+python manage.py makemigrations
+
+Display the Active Database Configuration, checking for issues
+python manage.py shell -c "from django.conf import settings; print(settings.DATABASES['default']['NAME'])"
+
+Collect Static Files for Deployment
+python manage.py collectstatic --noinput
 
 Create an admin account:
 
@@ -123,7 +131,7 @@ python manage.py createsuperuser
 
 Run the development server:
 
-python manage.py runserver
+daphne -b 0.0.0.0 -p 8000 MindLMS.asgi:application
 
 Open the application:
 
